@@ -34,7 +34,7 @@ Mehrdad Oveisi:
 
 ### Important links
 
-* [Syllabus / administrative info](docs/course_info.md)
+* [Syllabus / administrative info](syllabus.md)
 * [Course GitHub page](https://github.com/UBC-CS/cpsc330-2023W2)
 * [Course videos YouTube channel](https://www.youtube.com/playlist?list=PLHofvQE1VlGtZoAULxcHb7lOsMved0CuM)
 * [Canvas](https://canvas.ubc.ca/courses/130153)
