@@ -23,10 +23,8 @@ Office hours:
 
 | Section | Days  | Lecture | Location |
 |-|-|-|-|
-| 201 | Tue, Thu  | 10:30 - 11:50 | [LSK 200](https://ssc.adm.ubc.ca/classroomservices/function/viewlocation?userEvent=ShowLocation&buildingID=LSK&roomID=200)
-|
-| 202 | Tue, Thu | 15:30 - 17:00 | [MCML 360](https://ssc.adm.ubc.ca/classroomservices/function/viewlocation?userEvent=ShowLocation&buildingID=MCML&roomID=360)
-|
+| 201 | Tue, Thu  | 10:30 - 11:50 | [LSK 200](https://ssc.adm.ubc.ca/classroomservices/function/viewlocation?userEvent=ShowLocation&buildingID=LSK&roomID=200) |
+| 202 | Tue, Thu | 15:30 - 17:00 | [MCML 360](https://ssc.adm.ubc.ca/classroomservices/function/viewlocation?userEvent=ShowLocation&buildingID=MCML&roomID=360) |
 
 #### Course Coordinator
 
