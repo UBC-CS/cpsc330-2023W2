@@ -16,14 +16,12 @@ Office hours:
 
 | Instructor | Day  | Lecture | Location |
 |-|-|-|-|
-| Mehrdad Oveisi | TBD  | TBD | [LSK 200](https://ssc.adm.ubc.ca/classroomservices/function/viewlocation?userEvent=ShowLocation&buildingID=LSK&roomID=200)
-|
-| Mathias Lecuyer | TBD | TBD | ICICS 317
-|
+| Mehrdad Oveisi | TBD  | TBD | LSK 200 |
+| Mathias Lecuyer | TBD | TBD | ICICS 317 |
 
 #### Class Schedule
 
-| Section | Day  | Lecture | Location |
+| Section | Days  | Lecture | Location |
 |-|-|-|-|
 | 201 | Tue, Thu  | 10:30 - 11:50 | [LSK 200](https://ssc.adm.ubc.ca/classroomservices/function/viewlocation?userEvent=ShowLocation&buildingID=LSK&roomID=200)
 |
