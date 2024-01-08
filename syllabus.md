@@ -12,44 +12,40 @@ Application of machine learning tools, with an emphasis on solving practical pro
 
 **Lectures**:
 
-| Section | Day  | Lecture | Office Hour | Location |
-|-|-|-|-|-|
-| 911 | Tue, Thu  | 13:30 - 17:00 | 17:00 - 18:00 | [FSC 1005](https://ssc.adm.ubc.ca/classroomservices/function/viewlocation?userEvent=ShowLocation&buildingID=FSC&roomID=1005) |
-| 912 | Wed, Fri  | 13:30 - 17:00 | 17:00 - 18:00 | [DMP 110](https://ssc.adm.ubc.ca/classroomservices/function/viewlocation?userEvent=ShowLocation&buildingID=DMP&roomID=110) |
+| Section | Days  | Lecture | Location |
+|-|-|-|-|
+| 201 | Tue, Thu  | 10:30 - 11:50 | [LSK 200](https://ssc.adm.ubc.ca/classroomservices/function/viewlocation?userEvent=ShowLocation&buildingID=LSK&roomID=200) |
+| 202 | Tue, Thu | 15:30 - 17:00 | [MCML 360](https://ssc.adm.ubc.ca/classroomservices/function/viewlocation?userEvent=ShowLocation&buildingID=MCML&roomID=360) |
 
 
 **Tutorials and office hours**:
-For tutorial and office hours time and locations check the [Calendar](https://htmlpreview.github.io/?https://github.com/UBC-CS/cpsc330-2023s/blob/master/docs/calendar.html). The tutorials for this class will be run by the TAs and will be in office hours format. The tutorials are **optional**. That said, you will have more one-on-one time with the TAs and you are likely learn more about machine learning in general if take advantage of this.
+The tutorials for this class will be run by the TAs and will be in office hours format. The tutorials are **optional**. That said, you will have more one-on-one time with the TAs and you are likely learn more about machine learning in general if take advantage of this.
 
-**Post-lecture office hours**:
-Both the instructor and TA(s) will be present during the post-lecture office hours (which are after each class in the same classroom). During the post-lecture office hours:
-- For conceptual questions regarding materials covered in lectures, talk to the instructor.
-- For questions regarding assignments or technical issues, talk to the TA(s).
+Instructors will hold the following office hours:
+
+| Instructor | Day  | Time | Location |
+|-|-|-|-|
+| Mehrdad Oveisi | TBD  | TBD | TBD |
+| Mathias Lecuyer | Mon. (tentative) | 1pm (tentative) | ICICS 317 |
 
 ## Teaching Team
 
-**Instructor**: Mehrdad Oveisi (moveisi@cs.ubc.ca)
+**Instructors**: Mehrdad Oveisi (moveisi@cs.ubc.ca), Mathias Lecuyer
+(mathias.lecuyer@ubc.ca)
 
-**Course Coordinator**: Jeffrey Ho (cpsc330-admin@cs.ubc.ca)
+**Course Coordinator**: Mehrdad Oveisi (cpsc330-admin@cs.ubc.ca)
 
 **Teaching Assistants**:
-- Aninta, Sambina
-- Chockkalingam, Shruthi
-- DeMarco, Michael
-- GARG, ANUBHAV
-- Gholami, Peyman
-- Gonzalez Pizarro, Felipe
-- Liu, Chen
-- Lou, Martin
-- Rideout, Colleen
-- Thoma, Ethan
-- Wei, Ming Chun
-- Yang, Yilin
-- Yeryomenko, Yegor
-- Zaleski, Grayden
-- Zarei, Mahsa
-- Zhu, Weiya
-- Zung, Lauren
+- Gaurav Bhatt
+- Lin-Shuan Tu
+- Mahsa Zarei
+- Mishaal Kazmi
+- Fengzhe Shi
+- Shadab Shaikh
+- Shruthi Chockkalingam
+- Sparsh Trivedy
+- Seungyeon Baek
+- Yeojun Han
 
 ## Registration
 
@@ -72,8 +68,8 @@ The grading scheme for the course is as follows:
 | Syllabus quiz |   1%          | [Canvas](https://canvas.ubc.ca/courses/101888) | 
 | iClicker   |   2% | iClicker (TBA) |
 | Assignments |     20%         | [Gradescope](https://www.gradescope.ca/courses/5032) |
-| Midterm*   |     25%         | [Canvas](https://canvas.ubc.ca/courses/78046)     |
-| Final*     |     52%         | [Canvas](https://canvas.ubc.ca/courses/78046)     |
+| Midterm*   |     27%         | [Canvas](https://canvas.ubc.ca/courses/78046)     |
+| Final*     |     50%         | [Canvas](https://canvas.ubc.ca/courses/78046)     |
 
 *In order to pass the course, you must pass at least one of: (1) the final exam, or (2) a weighted average of the midterm and final exam.
 

@@ -25,13 +25,6 @@ Mehrdad Oveisi:
 - cpsc330-admin@cs.ubc.ca
 - Please email Mehrdad Oveisi at the above email address for all administrative concerns such as CFA accommodations, extensions or exemptions due to sickness or extenuating circumstances.
 
-#### Instructor office hours:
-
-| Instructor | Day  | Lecture | Location |
-|-|-|-|-|
-| Mehrdad Oveisi | TBD  | TBD | TBD |
-| Mathias Lecuyer | TBD | TBD | ICICS 317 |
-
 ### Important links
 
 * [Syllabus](syllabus.md)
