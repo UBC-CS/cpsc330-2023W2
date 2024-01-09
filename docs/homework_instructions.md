@@ -1,15 +1,15 @@
 # Homework info & submission guidelines
 
-You will be submitting your homework assignments on Gradescope. Check out [Gradescope Student Guide](https://lthub.ubc.ca/guides/gradescope-student-guide/). 
+You will be submitting your homework assignments on [PrairieLearn](https://ca.prairielearn.com/pl/course_instance/6697).
 
 ## Accessing homework assignments
 Every homework assignment will be made available on the [course GitHub page](https://github.com/UBC-CS/cpsc330-2022W2) under the `hw` folder. Once it's available, I'll make an announcement on [Piazza](https://piazza.com/class/lcgo6c2ncl06el). The assignment will generally consist of a jupyter notebook along with necessary code and data or links to download the data.    
 
 ## How to submit
 
-We anticipate that you will do `git pull` in your local course repository when the homework is made released. You may work on your homework locally or in a private GitHub repository, which provides you with a backup, version control for your work, a way to collaborate with others, to show unfinished work to instructors and ask for help, etc. To submit your homework you must **submit your final version of the notebook to [Gradescope](https://www.gradescope.ca/courses/5991)** where it will be graded. 
+We anticipate that you will do `git pull` in your local course repository when the homework is made released. You may work on your homework locally or in a private GitHub repository, which provides you with a backup, version control for your work, a way to collaborate with others, to show unfinished work to instructors and ask for help, etc. To submit your homework you must **submit your final version of the notebook to [PrairieLearn](https://ca.prairielearn.com/pl/course_instance/6697)** where it will be graded. 
 
-Once you submit to Gradescope, you should go there and ensure your assignment is there as expected and all the output and plots are rendered properly. **It is your responsibility to make sure your assignment is submitted properly and failure to do so will result in a deduction of marks.**
+Once you submit to PrairieLearn, you should go there and ensure your assignment is there as expected and all the output and plots are rendered properly. **It is your responsibility to make sure your assignment is submitted properly and failure to do so will result in a deduction of marks.**
 
 ## Other submission instructions
 
@@ -27,7 +27,7 @@ Please do not delete the question cells or move the questions around. This will 
 
 **You must ensure that all your code output (values, tables, figures, etc.) is displayed in the notebook.** For example, if you are required to calculate some value, it is not sufficient to just store the value to a variable, nor is it sufficient to have a `print(value)` in your code - the print code must actually be run and the notebook saved, so that the output is shown on the screen when the notebook is rendered. Likewise, if there are tests (e.g. `assert` statements) provided in the code, make sure these are left in so we can see the output of the tests. This allows the TAs to see your results without running your code. Failure to display all output will result in a deduction of marks.
 
-**If you are unsure whether your report is rendering properly, please view your submission in Gradescope. This is exactly how your TA will see it.**
+**If you are unsure whether your report is rendering properly, please view your submission in PrairieLearn.**
 
 ### Figures
 

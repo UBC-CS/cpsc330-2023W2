@@ -40,15 +40,15 @@ Mehrdad Oveisi:
 |Assessment  | Due date |  Where to find? | Where to submit? |
 |-------|-----------|-----------|-----------|
 | Syllabus quiz | Jan 15, 11:59pm | Canvas | Canvas |
-| hw1 | Jan 15, 11:59pm | [Github repo](https://github.com/UBC-CS/cpsc330-2023W2/tree/main/hw) | PrairieLearn (PL) |
-| hw2 | Jan 22, 11:59pm | [Github repo](https://github.com/UBC-CS/cpsc330-2023W2/tree/main/hw) | PL |
-| hw3 | Jan 29, 11:59pm | [Github repo](https://github.com/UBC-CS/cpsc330-2023W2/tree/main/hw) | PL |
-| hw4 | Feb 5, 11:59pm  | [Github repo](https://github.com/UBC-CS/cpsc330-2023W2/tree/main/hw) | PL |
-| hw5 | Feb 12, 11:59pm | [Github repo](https://github.com/UBC-CS/cpsc330-2023W2/tree/main/hw) | PL |
+| hw1 | Jan 15, 11:59pm | [Github repo](https://github.com/UBC-CS/cpsc330-2023W2/tree/main/hw) | [PrairieLearn (PL)](https://ca.prairielearn.com/pl/course_instance/6697) |
+| hw2 | Jan 22, 11:59pm | [Github repo](https://github.com/UBC-CS/cpsc330-2023W2/tree/main/hw) | [PL](https://ca.prairielearn.com/pl/course_instance/6697) |
+| hw3 | Jan 29, 11:59pm | [Github repo](https://github.com/UBC-CS/cpsc330-2023W2/tree/main/hw) | [PL](https://ca.prairielearn.com/pl/course_instance/6697) |
+| hw4 | Feb 5, 11:59pm  | [Github repo](https://github.com/UBC-CS/cpsc330-2023W2/tree/main/hw) | [PL](https://ca.prairielearn.com/pl/course_instance/6697) |
+| hw5 | Feb 12, 11:59pm | [Github repo](https://github.com/UBC-CS/cpsc330-2023W2/tree/main/hw) | [PL](https://ca.prairielearn.com/pl/course_instance/6697) |
 | **Midterm** | TBD, week of Feb 26-29 | TBD | TBD |
-| hw6 | Mar 11, 11:59pm | [Github repo](https://github.com/UBC-CS/cpsc330-2023W2/tree/main/hw) | PL |
-| hw7 | Mar 25, 11:59pm  | [Github repo](https://github.com/UBC-CS/cpsc330-2023W2/tree/main/hw) | PL |
-| hw8 | April 8, 11:59pm | [Github repo](https://github.com/UBC-CS/cpsc330-2023W2/tree/main/hw) | PL |
+| hw6 | Mar 11, 11:59pm | [Github repo](https://github.com/UBC-CS/cpsc330-2023W2/tree/main/hw) | [PL](https://ca.prairielearn.com/pl/course_instance/6697) |
+| hw7 | Mar 25, 11:59pm  | [Github repo](https://github.com/UBC-CS/cpsc330-2023W2/tree/main/hw) | [PL](https://ca.prairielearn.com/pl/course_instance/6697) |
+| hw8 | April 8, 11:59pm | [Github repo](https://github.com/UBC-CS/cpsc330-2023W2/tree/main/hw) | [PL](https://ca.prairielearn.com/pl/course_instance/6697) |
 | **Final exam** | TBD | TBD | TBD |
 
 ## Lecture schedule (tentative)
