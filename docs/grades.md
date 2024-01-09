@@ -14,10 +14,6 @@ The grading scheme for the course is as follows:
 
 *In order to pass the course, you must pass at least one of: (1) the final exam, or (2) a weighted average of the midterm and final exam.
 
-- **A score of at least 50% in the Final Exam is required to pass the course.**
-- For the weight of each homework assignment, see the [GitHub homepage](https://github.com/UBC-CS/cpsc330-2022W2#deliverable-due-dates-tentative).
-- Your lowest homework grade will be dropped.
-
 ## General guidelines
 - All grading concerns and challenges must be submitted to Michelle, your CPSC 330 course coordinator ([cpsc330-admin@cs.ubc.ca](cpsc330-admin@cs.ubc.ca)) for review. 
 - Clearly state your name, student number, the assessment, and your concern.
