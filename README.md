@@ -39,7 +39,7 @@ Mehrdad Oveisi:
 
 |Assessment  | Due date |  Where to find? | Where to submit? |
 |-------|-----------|-----------|-----------|
-| Syllabus quiz | Jan 15, 11:59pm | [PrairieLearn (PL)](https://ca.prairielearn.com/pl/course_instance/6697) |  [PL](https://ca.prairielearn.com/pl/course_instance/6697) |
+| Syllabus quiz | Jan 15, 11:59pm | [PrairieLearn (PL)](https://ca.prairielearn.com/pl/course_instance/6697/assessment/42218) |  [PL](https://ca.prairielearn.com/pl/course_instance/6697/assessment/42218) |
 | hw1 | Jan 15, 11:59pm | [Github repo](https://github.com/UBC-CS/cpsc330-2023W2/tree/main/hw) | [PL](https://ca.prairielearn.com/pl/course_instance/6697) |
 | hw2 | Jan 22, 11:59pm | [Github repo](https://github.com/UBC-CS/cpsc330-2023W2/tree/main/hw) | [PL](https://ca.prairielearn.com/pl/course_instance/6697) |
 | hw3 | Jan 29, 11:59pm | [Github repo](https://github.com/UBC-CS/cpsc330-2023W2/tree/main/hw) | [PL](https://ca.prairielearn.com/pl/course_instance/6697) |
