@@ -59,8 +59,10 @@ Instructors will hold the following office hours (any updates will be announced 
 
 ### *Course Coordinator:*
 - Mehrdad Oveisi
-- TODO (Lead TA)
+- Shruthi Chockkalingam (Lead TA)
 - cpsc330-admin@cs.ubc.ca
+- Use this email as your primary point of contact for logistical issues related to the course.
+
 
 
 ### *Teaching Assistants:*
