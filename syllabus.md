@@ -96,7 +96,7 @@ The grading scheme for the course is as follows:
 
 | Component   | Weight          | Location   |
 |-------------|-----------------|------------|
-| Syllabus quiz |   1%          | [Canvas](https://canvas.ubc.ca/courses/130153) | 
+| Syllabus quiz |   1%          | [PrairieLearn](https://ca.prairielearn.com/pl/course_instance/6697) | 
 | iClicker   |   2% | [Section 201](https://join.iclicker.com/WMSX), [Section 202](https://join.iclicker.com/FSLV) |
 | Assignments |     20%         | [PrairieLearn](https://ca.prairielearn.com/pl/course_instance/6697) |
 | Midterm*   |     27%         | [PrairieLearn](https://ca.prairielearn.com/pl/course_instance/6697) |
