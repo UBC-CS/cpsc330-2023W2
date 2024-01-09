@@ -4,12 +4,15 @@
  
 The grading scheme for the course is as follows:
 
-| Component                                                                               | Weight          | Location   |
-|-----------------------------------------------------------------------------------------|-----------------|------------|
-| Syllabus quiz                                                                           |   1%           | Canvas | 
-| [Assignments](https://github.com/UBC-CS/cpsc330-2022W2#deliverable-due-dates-tentative) |     30%         | Gradescope |
-| Midterm                                                                                 |     19%         | Canvas |
-| Final                                                                                   |     50%         | Canvas |
+| Component   | Weight          | Location   |
+|-------------|-----------------|------------|
+| Syllabus quiz |   1%          | [Canvas](https://canvas.ubc.ca/courses/130153) | 
+| iClicker   |   2% | iClicker (TBA) |
+| Assignments |     20%         | PrairieLearn |
+| Midterm*   |     27%         | [Canvas](https://canvas.ubc.ca/courses/130153)     |
+| Final*     |     50%         | [Canvas](https://canvas.ubc.ca/courses/130153)     |
+
+*In order to pass the course, you must pass at least one of: (1) the final exam, or (2) a weighted average of the midterm and final exam.
 
 - **A score of at least 50% in the Final Exam is required to pass the course.**
 - For the weight of each homework assignment, see the [GitHub homepage](https://github.com/UBC-CS/cpsc330-2022W2#deliverable-due-dates-tentative).
