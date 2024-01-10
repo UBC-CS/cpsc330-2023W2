@@ -114,7 +114,7 @@ Here are a few points regarding iClicker:
 - Exemptions will not be granted for missed iClickers under any circumstances.
 - You may attend either of sections 201 or 202 and gain iCLicker points. However, if you attend both, then you get the marks for the first one.
 
-**Registration for iClicker.** When registering for iClicker you must specify your CWL as your ID. Failure to do so, may result in receiving zero as your iClicker mark.
+**Registration for iClicker.** When registering for iClicker you must specify your correct Student ID. Failure to do so, may result in receiving zero as your iClicker mark.
 
 ### *Assignments:*
 
