@@ -7,7 +7,7 @@ If you want to clone the class GitHub repository and run lecture notebooks local
 Once you have `Git` go to the directory where you want to do CPSC 330 work, and clone the Course GitHub repository using the following command on your command line. 
 
 ```
-git clone https://github.com/UBC-CS/cpsc330-2022W2.git
+git clone https://github.com/UBC-CS/cpsc330-2023W2.git
 ```
 
 When there are updates in the repository, you can update the local copy using the command below from the directory of the repository. 
@@ -105,7 +105,7 @@ For other packages we need for the course, we will be creating a `conda` virtual
     conda env list
     ```
     You should see a list of environments as the output. If Miniconda is not installed, you can download Miniconda (a small, bootstrap version of Anaconda) from [here](https://docs.conda.io/en/latest/miniconda.html).  
-2. Download [cpsc330env.yml](https://github.com/UBC-CS/cpsc330-2022W2/blob/main/docs/cpsc330env.yml) and put it in your working directory
+2. Download [cpsc330env.yml](https://github.com/UBC-CS/cpsc330-2023W2/blob/main/docs/cpsc330env.yml) and put it in your working directory
 3. Create an environment by 
     ```
     conda env create -f cpsc330env.yml
