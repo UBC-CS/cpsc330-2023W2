@@ -1,6 +1,6 @@
 from utils import *
 import matplotlib.pyplot as plt
-import mglearn
+import mglearn_utils as mglearn
 from imageio import imread
 from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
 from sklearn.metrics.pairwise import euclidean_distances
@@ -71,7 +71,7 @@ def plot_tree_decision_boundary(
     if title is None:
         title = "max_depth=%d" % (model.tree_.max_depth)
 
-    mglearn.plots.plot_2d_separator(
+    mglearn.plot_2d_separator(
         model, X.to_numpy(), eps=eps, fill=True, alpha=0.5, ax=ax
     )
     mglearn.discrete_scatter(X.iloc[:, 0], X.iloc[:, 1], y, ax=ax)
@@ -152,7 +152,7 @@ def plot_knn_decision_boundaries(X_train, y_train, k_values = [1,11,100]):
         mean_valid_score = scores["test_score"].mean()
         mean_train_score = scores["train_score"].mean()
         clf.fit(X_train, y_train)
-        mglearn.plots.plot_2d_separator(
+        mglearn.plot_2d_separator(
             clf, X_train.to_numpy(), fill=True, eps=0.5, ax=ax, alpha=0.4
         )
         mglearn.discrete_scatter(X_train.iloc[:, 0], X_train.iloc[:, 1], y_train, ax=ax)
@@ -181,7 +181,7 @@ def plot_train_test_points(X_train, y_train, X_test, class_names=['class 0','cla
     
 
 def plot_support_vectors(svm, X, y):
-    mglearn.plots.plot_2d_separator(svm, X, eps=.5)
+    mglearn.plot_2d_separator(svm, X, eps=.5)
     mglearn.discrete_scatter(X[:, 0], X[:, 1], y)
     sv = svm.support_vectors_ # plot support vectors
     # class labels of support vectors are given by the sign of the dual coefficients
@@ -200,7 +200,7 @@ def plot_svc_gamma(param_grid, X_train, y_train, x_label="longitude", y_label='l
         mean_valid_score = scores["test_score"].mean()
         mean_train_score = scores["train_score"].mean()
         clf.fit(X_train, y_train)
-        mglearn.plots.plot_2d_separator(
+        mglearn.plot_2d_separator(
             clf, X_train, fill=True, eps=0.5, ax=ax, alpha=0.4
         )
         mglearn.discrete_scatter(X_train[:, 0], X_train[:, 1], y_train, ax=ax)
@@ -220,7 +220,7 @@ def plot_svc_C(param_grid, X_train, y_train, x_label="longitude", y_label='latit
         mean_valid_score = scores["test_score"].mean()
         mean_train_score = scores["train_score"].mean()
         clf.fit(X_train, y_train)
-        mglearn.plots.plot_2d_separator(
+        mglearn.plot_2d_separator(
             clf, X_train, fill=True, eps=0.5, ax=ax, alpha=0.4
         )
         mglearn.discrete_scatter(X_train[:, 0], X_train[:, 1], y_train, ax=ax)
@@ -479,5 +479,5 @@ def plot_multiclass_lr_ovr(lr, X_train, y_train, n_classes, test_points=None, de
         for test_point in test_points: 
             plt.plot(test_point[0], test_point[1], "k*", markersize=16)
     if decision_boundary:
-        mglearn.plots.plot_2d_classification(lr, X_train, fill=True, alpha=0.7)
+        mglearn.plot_2d_classification(lr, X_train, fill=True, alpha=0.7)
         
