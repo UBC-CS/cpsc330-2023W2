@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap, colorConverter
+from sklearn.datasets import make_blobs
 
 cm3 = ListedColormap(['#0000aa', '#ff2020', '#50ff50'])
 cm2 = ListedColormap(['#0000aa', '#ff2020'])
@@ -295,3 +296,21 @@ def plot_cross_validation():
                ["Split %d" % x for x in range(1, n_folds + 1)])
     plt.legend([bars[0], bars[4]], ['Training data', 'Test data'],
                loc=(1.05, 0.4), frameon=False)
+
+
+def make_forge():
+    # a carefully hand-designed dataset lol
+    X, y = make_blobs(centers=2, random_state=4, n_samples=30)
+    y[np.array([7, 27])] = 0
+    mask = np.ones(len(X), dtype=bool)
+    mask[np.array([0, 1, 5, 26])] = 0
+    X, y = X[mask], y[mask]
+    return X, y
+
+
+def make_wave(n_samples=100):
+    rnd = np.random.RandomState(42)
+    x = rnd.uniform(-3, 3, size=n_samples)
+    y_no_noise = (np.sin(4 * x) + x)
+    y = (y_no_noise + rnd.normal(size=len(x))) / 2
+    return x.reshape(-1, 1), y
