@@ -1,0 +1,2203 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+
+    \usepackage{iftex}
+    \ifPDFTeX
+        \usepackage[T1]{fontenc}
+        \IfFileExists{alphabeta.sty}{
+              \usepackage{alphabeta}
+          }{
+              \usepackage[mathletters]{ucs}
+              \usepackage[utf8x]{inputenc}
+          }
+    \else
+        \usepackage{fontspec}
+        \usepackage{unicode-math}
+    \fi
+
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage{array}     % table support for pandoc >= 2.11.3
+    \usepackage{calc}      % table minipage width calculation for pandoc >= 2.11.1
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{soul}      % strikethrough (\st) support for pandoc >= 3.0.0
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+
+
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{04\_kNNs-SVM-RBF}
+    
+    
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.61,0.40,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.80,0.25,0.22}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.46,0.46,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.41,0.47,0.13}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.36,0.12}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.52,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{0.89,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@ges}{\let\PY@bf=\textbf\let\PY@it=\textit}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb.
+    \makeatletter
+        \newbox\Wrappedcontinuationbox
+        \newbox\Wrappedvisiblespacebox
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}}
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}}
+        \newcommand*\Wrappedcontinuationindent {3ex }
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox}
+        % Take advantage of the already applied Pygments mark-up to insert
+        % potential linebreaks for TeX processing.
+        %        {, <, #, %, $, ' and ": go to next line.
+        %        _, }, ^, &, >, - and ~: stay at end of broken line.
+        % Use of \textquotesingle for straight quote.
+        \newcommand*\Wrappedbreaksatspecials {%
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}%
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}%
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}%
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}%
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}%
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}%
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}%
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}%
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}%
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}%
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}%
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}%
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}%
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}%
+        }
+        % Some characters . , ; ? ! / are not pygmentized.
+        % This macro makes them "active" and they will insert potential linebreaks
+        \newcommand*\Wrappedbreaksatpunct {%
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}%
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}%
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}%
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}%
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}%
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}%
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}%
+            \catcode`\.\active
+            \catcode`\,\active
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active
+            \lccode`\~`\~
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \includegraphics{/Users/charleenchu/Desktop/school/cpsc330-2023W2/lectures/img/330-banner.png}
+
+    \section{\texorpdfstring{Lecture 4: \(k\)-Nearest Neighbours and SVM
+RBFs}{Lecture 4: k-Nearest Neighbours and SVM RBFs}}\label{lecture-4-k-nearest-neighbours-and-svm-rbfs}
+
+UBC 2023-24
+
+Instructors: Mathias Lécuyer and Mehrdad Oveisi
+
+\begin{quote}
+If two things are similar, the thought of one will tend to trigger the
+thought of the other -- Aristotle
+\end{quote}
+
+    \subsubsection{Announcements}\label{announcements}
+
+\begin{itemize}
+\tightlist
+\item
+  hw2 was due Yesterday.
+\item
+  hw3 will be released soon, you have more time to do it. ((Due Monday,
+  Feb 5 at
+  11:59pm.){[}https://github.com/UBC-CS/cpsc330-2023W2\#deliverable-due-dates-tentative{]})
+
+  \begin{itemize}
+  \tightlist
+  \item
+    We are allowing group submissions for this homework.
+  \end{itemize}
+\item
+  The lecture notes within these notebooks align with the content
+  presented in the videos. Even though we do not cover all the content
+  from these notebooks during lectures, it's your responsibility to go
+  through them on your own.
+\item
+  By this point, you should know your course enrollment status.
+  Registration for tutorials is not mandatory; they are optional and
+  will follow an office-hour format. You are free to attend any tutorial
+  session of your choice.
+\end{itemize}
+
+    \subsection{Imports, and LOs}\label{imports-and-los}
+
+    \subsubsection{Imports}\label{imports}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{sys}
+
+\PY{k+kn}{import} \PY{n+nn}{IPython}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+\PY{k+kn}{from} \PY{n+nn}{IPython}\PY{n+nn}{.}\PY{n+nn}{display} \PY{k+kn}{import} \PY{n}{HTML}
+
+\PY{n}{sys}\PY{o}{.}\PY{n}{path}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../code/.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+\PY{k+kn}{import} \PY{n+nn}{ipywidgets} \PY{k}{as} \PY{n+nn}{widgets}
+\PY{k+kn}{import} \PY{n+nn}{mglearn\PYZus{}utils}
+\PY{k+kn}{from} \PY{n+nn}{IPython}\PY{n+nn}{.}\PY{n+nn}{display} \PY{k+kn}{import} \PY{n}{display}
+\PY{k+kn}{from} \PY{n+nn}{ipywidgets} \PY{k+kn}{import} \PY{n}{interact}\PY{p}{,} \PY{n}{interactive}
+\PY{k+kn}{from} \PY{n+nn}{plotting\PYZus{}functions} \PY{k+kn}{import} \PY{o}{*}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{dummy} \PY{k+kn}{import} \PY{n}{DummyClassifier}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k+kn}{import} \PY{n}{cross\PYZus{}validate}\PY{p}{,} \PY{n}{train\PYZus{}test\PYZus{}split}
+\PY{k+kn}{from} \PY{n+nn}{utils} \PY{k+kn}{import} \PY{o}{*}
+
+\PY{o}{\PYZpc{}}\PY{k}{matplotlib} inline
+
+\PY{n}{pd}\PY{o}{.}\PY{n}{set\PYZus{}option}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{display.max\PYZus{}colwidth}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+m+mi}{200}\PY{p}{)}
+\PY{k+kn}{import} \PY{n+nn}{warnings}
+
+\PY{n}{warnings}\PY{o}{.}\PY{n}{filterwarnings}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ignore}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+
+    \subsubsection{Learning outcomes}\label{learning-outcomes}
+
+From this lecture, you will be able to
+
+\begin{itemize}
+\tightlist
+\item
+  explain the notion of similarity-based algorithms;
+\item
+  broadly describe how \(k\)-NNs use distances;
+\item
+  discuss the effect of using a small/large value of the hyperparameter
+  \(k\) when using the \(k\)-NN algorithm;
+\item
+  describe the problem of curse of dimensionality;
+\item
+  explain the general idea of SVMs with RBF kernel;
+\item
+  broadly describe the relation of \texttt{gamma} and \texttt{C}
+  hyperparameters of SVMs with the fundamental tradeoff.
+\end{itemize}
+
+    
+
+    \subsubsection{Quick recap}\label{quick-recap}
+
+\begin{itemize}
+\tightlist
+\item
+  Why do we split the data?
+\item
+  What are the 4 types of data we discussed last class?
+\item
+  What are the benefits of cross-validation?
+\item
+  What is overfitting?
+\item
+  What's the fundamental trade-off in supervised machine learning?
+\item
+  What is the golden rule of machine learning?
+\end{itemize}
+
+    
+
+    \subsection{\texorpdfstring{Motivation and distances
+{[}\href{https://youtu.be/hCa3EXEUmQk}{video}{]}}{Motivation and distances {[}video{]}}}\label{motivation-and-distances-video}
+
+    \subsubsection{Analogy-based models}\label{analogy-based-models}
+
+\begin{itemize}
+\tightlist
+\item
+  Suppose you are given the following training examples with
+  corresponding labels and are asked to label a given test example.
+\end{itemize}
+
+\href{https://vipl.ict.ac.cn/en/database.php}{source}
+
+\begin{itemize}
+\tightlist
+\item
+  An intuitive way to classify the test example is by finding the most
+  ``similar'' example(s) from the training set and using that label for
+  the test example.
+\end{itemize}
+
+    \subsubsection{Analogy-based algorithms in
+practice}\label{analogy-based-algorithms-in-practice}
+
+\begin{itemize}
+\tightlist
+\item
+  \href{https://www.hertasecurity.com/en}{Herta's High-tech Facial
+  Recognition}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Feature vectors for human faces
+  \item
+    \(k\)-NN to identify which face is on their watch list
+  \end{itemize}
+\item
+  Recommendation systems
+\end{itemize}
+
+    \subsubsection{\texorpdfstring{General idea of \(k\)-nearest neighbours
+algorithm}{General idea of k-nearest neighbours algorithm}}\label{general-idea-of-k-nearest-neighbours-algorithm}
+
+\begin{itemize}
+\tightlist
+\item
+  Consider the following toy dataset with two classes.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    blue circles \(\rightarrow\) class 0
+  \item
+    red triangles \(\rightarrow\) class 1
+  \item
+    green stars \(\rightarrow\) test examples
+  \end{itemize}
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X}\PY{p}{,} \PY{n}{y} \PY{o}{=} \PY{n}{mglearn\PYZus{}utils}\PY{o}{.}\PY{n}{make\PYZus{}forge}\PY{p}{(}\PY{p}{)}
+\PY{n}{X\PYZus{}test} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mf}{8.2}\PY{p}{,} \PY{l+m+mf}{3.66214339}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{l+m+mf}{9.9}\PY{p}{,} \PY{l+m+mf}{3.2}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{l+m+mf}{11.2}\PY{p}{,} \PY{l+m+mf}{0.5}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plot\PYZus{}train\PYZus{}test\PYZus{}points}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{X\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_16_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{itemize}
+\tightlist
+\item
+  Given a new data point, predict the class of the data point by finding
+  the ``closest'' data point in the training set, i.e., by finding its
+  ``nearest neighbour'' or majority vote of nearest neighbours.
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{f}\PY{p}{(}\PY{n}{n\PYZus{}neighbors}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{n}{plot\PYZus{}knn\PYZus{}clf}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{n\PYZus{}neighbors}\PY{o}{=}\PY{n}{n\PYZus{}neighbors}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{f}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+n\_neighbors 3
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_19_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsubsection{Geometric view of tabular data and
+dimensions}\label{geometric-view-of-tabular-data-and-dimensions}
+
+\begin{itemize}
+\tightlist
+\item
+  To understand analogy-based algorithms it's useful to think of data as
+  points in a high dimensional space.
+\item
+  Our \texttt{X} represents the problem in terms of relevant
+  \textbf{features} (\(d\)) with one dimension for each \textbf{feature}
+  (column).
+\item
+  Examples are \textbf{points in a \(d\)-dimensional space}.
+\end{itemize}
+
+    How many dimensions (features) are there in the cities data?
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{cities\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../data/canada\PYZus{}usa\PYZus{}cities.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{X\PYZus{}cities} \PY{o}{=} \PY{n}{cities\PYZus{}df}\PY{p}{[}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{longitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{latitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{]}
+\PY{n}{y\PYZus{}cities} \PY{o}{=} \PY{n}{cities\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{country}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{mglearn\PYZus{}utils}\PY{o}{.}\PY{n}{discrete\PYZus{}scatter}\PY{p}{(}\PY{n}{X\PYZus{}cities}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{n}{X\PYZus{}cities}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{y\PYZus{}cities}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{longitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{latitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_23_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{itemize}
+\tightlist
+\item
+  Recall the
+  \href{https://www.kaggle.com/geomack/spotifyclassification/home}{Spotify
+  Song Attributes} dataset from homework 1.
+\item
+  How many dimensions (features) we used in the homework?
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{spotify\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../data/spotify.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{index\PYZus{}col}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}
+\PY{n}{X\PYZus{}spotify} \PY{o}{=} \PY{n}{spotify\PYZus{}df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{target}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{song\PYZus{}title}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{artist}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{The number of features in the Spotify dataset: }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{n}{X\PYZus{}spotify}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+\PY{n}{X\PYZus{}spotify}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+The number of features in the Spotify dataset: 13
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   acousticness  danceability  duration\_ms  energy  instrumentalness  key  \textbackslash{}
+0        0.0102         0.833       204600   0.434          0.021900    2
+1        0.1990         0.743       326933   0.359          0.006110    1
+2        0.0344         0.838       185707   0.412          0.000234    2
+3        0.6040         0.494       199413   0.338          0.510000    5
+4        0.1800         0.678       392893   0.561          0.512000    5
+
+   liveness  loudness  mode  speechiness    tempo  time\_signature  valence
+0    0.1650    -8.795     1       0.4310  150.062             4.0    0.286
+1    0.1370   -10.401     1       0.0794  160.083             4.0    0.588
+2    0.1590    -7.148     1       0.2890   75.044             4.0    0.173
+3    0.0922   -15.236     1       0.0261   86.468             4.0    0.230
+4    0.4390   -11.648     0       0.0694  174.004             4.0    0.904
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \subsubsection{Dimensions in ML
+problems}\label{dimensions-in-ml-problems}
+
+In ML, usually we deal with high dimensional problems where examples are
+hard to visualize.
+
+\begin{itemize}
+\tightlist
+\item
+  \(d \approx 20\) is considered low dimensional
+\item
+  \(d \approx 1000\) is considered medium dimensional
+\item
+  \(d \approx 100,000\) is considered high dimensional
+\end{itemize}
+
+    \subsubsection{Feature vectors}\label{feature-vectors}
+
+\begin{description}
+\tightlist
+\item[\textbf{Feature vector}]
+is composed of feature values associated with an example.
+\end{description}
+
+Some example feature vectors are shown below.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}
+    \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{An example feature vector from the cities dataset: }\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{\PYZdq{}}
+    \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{X\PYZus{}cities}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{to\PYZus{}numpy}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}
+    \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{An example feature vector from the Spotify dataset: }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{\PYZdq{}}
+    \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{X\PYZus{}spotify}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{to\PYZus{}numpy}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+An example feature vector from the cities dataset: [-130.0437   55.9773]
+An example feature vector from the Spotify dataset:
+[ 1.02000e-02  8.33000e-01  2.04600e+05  4.34000e-01  2.19000e-02
+  2.00000e+00  1.65000e-01 -8.79500e+00  1.00000e+00  4.31000e-01
+  1.50062e+02  4.00000e+00  2.86000e-01]
+    \end{Verbatim}
+
+    \subsubsection{Similarity between
+examples}\label{similarity-between-examples}
+
+Let's take 2 points (two feature vectors) from the cities dataset.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{two\PYZus{}cities} \PY{o}{=} \PY{n}{X\PYZus{}cities}\PY{o}{.}\PY{n}{sample}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{120}\PY{p}{)}
+\PY{n}{two\PYZus{}cities}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+    longitude  latitude
+69  -104.8253   38.8340
+35  -112.0741   33.4484
+\end{Verbatim}
+\end{tcolorbox}
+        
+    The two sampled points are shown as big black circles.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{mglearn\PYZus{}utils}\PY{o}{.}\PY{n}{discrete\PYZus{}scatter}\PY{p}{(}
+    \PY{n}{X\PYZus{}cities}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{n}{X\PYZus{}cities}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{y\PYZus{}cities}\PY{p}{,} \PY{n}{s}\PY{o}{=}\PY{l+m+mi}{8}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.3}
+\PY{p}{)}
+\PY{n}{mglearn\PYZus{}utils}\PY{o}{.}\PY{n}{discrete\PYZus{}scatter}\PY{p}{(}
+    \PY{n}{two\PYZus{}cities}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{n}{two\PYZus{}cities}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{markers}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{o}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{k}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{s}\PY{o}{=}\PY{l+m+mi}{18}
+\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_32_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsubsection{Distance between feature
+vectors}\label{distance-between-feature-vectors}
+
+\begin{itemize}
+\tightlist
+\item
+  For the cities at the two big circles, what is the \emph{distance}
+  between them?
+\item
+  A common way to calculate the distance between vectors is calculating
+  the \textbf{Euclidean distance}.
+\item
+  The euclidean distance between vectors \(u = <u_1, u_2, \dots, u_n>\)
+  and \(v = <v_1, v_2, \dots, v_n>\) is defined as:
+\end{itemize}
+
+\[distance(u, v) = \sqrt{\sum_{i =1}^{n} (u_i - v_i)^2}\]
+
+    \subsubsection{Euclidean distance}\label{euclidean-distance}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{two\PYZus{}cities}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+    longitude  latitude
+69  -104.8253   38.8340
+35  -112.0741   33.4484
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{itemize}
+\tightlist
+\item
+  Subtract the two cities
+\item
+  Square the difference
+\item
+  Sum them up
+\item
+  Take the square root
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Subtract the two cities}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Subtract the cities: }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+si}{\PYZpc{}s}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{two\PYZus{}cities}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{two\PYZus{}cities}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Squared sum of the difference}
+\PY{n+nb}{print}\PY{p}{(}
+    \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Sum of squares: }\PY{l+s+si}{\PYZpc{}0.4f}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{(}\PY{n}{two\PYZus{}cities}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{two\PYZus{}cities}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)} \PY{o}{*}\PY{o}{*} \PY{l+m+mi}{2}\PY{p}{)}\PY{p}{)}
+\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Take the square root}
+\PY{n+nb}{print}\PY{p}{(}
+    \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Euclidean distance between cities: }\PY{l+s+si}{\PYZpc{}0.4f}\PY{l+s+s2}{\PYZdq{}}
+    \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{sqrt}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{(}\PY{n}{two\PYZus{}cities}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{two\PYZus{}cities}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)} \PY{o}{*}\PY{o}{*} \PY{l+m+mi}{2}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Subtract the cities:
+longitude   -7.2488
+latitude    -5.3856
+dtype: float64
+
+Sum of squares: 81.5498
+Euclidean distance between cities: 9.0305
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{two\PYZus{}cities}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+    longitude  latitude
+69  -104.8253   38.8340
+35  -112.0741   33.4484
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Euclidean distance using sklearn}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{metrics}\PY{n+nn}{.}\PY{n+nn}{pairwise} \PY{k+kn}{import} \PY{n}{euclidean\PYZus{}distances}
+
+\PY{n}{euclidean\PYZus{}distances}\PY{p}{(}\PY{n}{two\PYZus{}cities}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+array([[0.        , 9.03049217],
+       [9.03049217, 0.        ]])
+\end{Verbatim}
+\end{tcolorbox}
+        
+    Note: \texttt{scikit-learn} supports a number of other
+\href{https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.DistanceMetric.html}{distance
+metrics}.
+
+    \subsubsection{Finding the nearest
+neighbour}\label{finding-the-nearest-neighbour}
+
+\begin{itemize}
+\tightlist
+\item
+  Let's look at distances from all cities to all other cities
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{dists} \PY{o}{=} \PY{n}{euclidean\PYZus{}distances}\PY{p}{(}\PY{n}{X\PYZus{}cities}\PY{p}{)}
+\PY{n}{np}\PY{o}{.}\PY{n}{fill\PYZus{}diagonal}\PY{p}{(}\PY{n}{dists}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{inf}\PY{p}{)}
+\PY{n}{dists}\PY{o}{.}\PY{n}{shape}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+(209, 209)
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{17}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{dists}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{17}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+           0          1          2          3          4          5    \textbackslash{}
+0          inf   4.955113   9.869531  10.106452  10.449666  19.381676
+1     4.955113        inf  14.677579  14.935802  15.305346  24.308448
+2     9.869531  14.677579        inf   0.334411   0.808958  11.115406
+3    10.106452  14.935802   0.334411        inf   0.474552  10.781004
+4    10.449666  15.305346   0.808958   0.474552        inf  10.306500
+..         {\ldots}        {\ldots}        {\ldots}        {\ldots}        {\ldots}        {\ldots}
+204  58.289799  63.032656  50.483751  50.150395  49.677629  39.405415
+205  64.183423  68.887343  56.512897  56.179123  55.705696  45.418031
+206  52.426410  57.253724  44.235152  43.904226  43.435186  33.258427
+207  58.033459  62.771969  50.249720  49.916254  49.443317  39.167214
+208  51.498562  56.252160  43.699224  43.365623  42.892477  32.612755
+
+           6          7          8          9    {\ldots}        199        200  \textbackslash{}
+0    28.366626  33.283857  33.572105  36.180388  {\ldots}   9.834455  58.807684
+1    33.200978  38.082949  38.359992  40.957919  {\ldots}  14.668787  63.533498
+2    20.528403  25.525757  25.873103  28.479109  {\ldots}   0.277381  51.076798
+3    20.194002  25.191396  25.538702  28.144750  {\ldots}   0.275352  50.743133
+4    19.719500  24.716985  25.064200  27.670344  {\ldots}   0.675814  50.269880
+..         {\ldots}        {\ldots}        {\ldots}        {\ldots}  {\ldots}        {\ldots}        {\ldots}
+204  30.043890  25.057003  24.746328  22.127878  {\ldots}  50.333340   0.873356
+205  36.031385  31.032874  30.709185  28.088948  {\ldots}  56.358333   5.442806
+206  24.059863  19.187663  18.932124  16.380495  {\ldots}  44.100248   7.767852
+207  29.799983  24.810368  24.497386  21.878183  {\ldots}  50.098326   0.930123
+208  23.244592  18.256813  17.946783  15.328953  {\ldots}  43.546610   7.378764
+
+           201        202        203        204        205        206  \textbackslash{}
+0    16.925593  56.951696  59.384127  58.289799  64.183423  52.426410
+1    21.656349  61.691640  64.045304  63.032656  68.887343  57.253724
+2    10.783789  49.169693  51.934205  50.483751  56.512897  44.235152
+3    10.480249  48.836189  51.599860  50.150395  56.179123  43.904226
+4    10.051472  48.363192  51.125476  49.677629  55.705696  43.435186
+..         {\ldots}        {\ldots}        {\ldots}        {\ldots}        {\ldots}        {\ldots}
+204  41.380643   1.345136   3.373031        inf   6.102435   6.957987
+205  47.259286   7.369875   5.108681   6.102435        inf  12.950733
+206  35.637982   5.930561   9.731583   6.957987  12.950733        inf
+207  41.121628   1.082749   3.286821   0.316363   6.303916   6.837848
+208  34.596810   5.473691   8.568009   6.800190  12.819584   3.322755
+
+           207        208
+0    58.033459  51.498562
+1    62.771969  56.252160
+2    50.249720  43.699224
+3    49.916254  43.365623
+4    49.443317  42.892477
+..         {\ldots}        {\ldots}
+204   0.316363   6.800190
+205   6.303916  12.819584
+206   6.837848   3.322755
+207        inf   6.555740
+208   6.555740        inf
+
+[209 rows x 209 columns]
+\end{Verbatim}
+\end{tcolorbox}
+        
+    Let's look at the distances between City 0 and some other cities.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{18}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Feature vector for city 0: }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+si}{\PYZpc{}s}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{X\PYZus{}cities}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Distances from city 0 to the first 5 cities: }\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{dists}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{p}{:}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} We can find the closest city with `np.argmin`:}
+\PY{n+nb}{print}\PY{p}{(}
+    \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{The closest city from city 0 is: }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{ }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{with feature vector: }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{\PYZdq{}}
+    \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{argmin}\PY{p}{(}\PY{n}{dists}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{n}{X\PYZus{}cities}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{np}\PY{o}{.}\PY{n}{argmin}\PY{p}{(}\PY{n}{dists}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{]}\PY{p}{)}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Feature vector for city 0:
+longitude   -130.0437
+latitude      55.9773
+Name: 0, dtype: float64
+
+Distances from city 0 to the first 5 cities: [        inf  4.95511263  9.869531
+10.10645223 10.44966612]
+The closest city from city 0 is: 81
+
+with feature vector:
+longitude   -129.9912
+latitude      55.9383
+Name: 81, dtype: float64
+    \end{Verbatim}
+
+    Ok, so the closest city to City 0 is City 81.
+
+    \subsubsection{Question}\label{question}
+
+\begin{itemize}
+\tightlist
+\item
+  Why did we set the diagonal entries to infinity before finding the
+  closest city?
+\end{itemize}
+
+    \subsubsection{Finding the distances to a query
+point}\label{finding-the-distances-to-a-query-point}
+
+We can also find the distances to a new ``test'' or ``query'' city:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{19}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Let\PYZsq{}s find a city that\PYZsq{}s closest to the a query city}
+\PY{n}{query\PYZus{}point} \PY{o}{=} \PY{p}{[}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{80}\PY{p}{,} \PY{l+m+mi}{25}\PY{p}{]}\PY{p}{]}
+
+\PY{n}{dists} \PY{o}{=} \PY{n}{euclidean\PYZus{}distances}\PY{p}{(}\PY{n}{X\PYZus{}cities}\PY{p}{,} \PY{n}{query\PYZus{}point}\PY{p}{)}
+\PY{n}{dists}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{10}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{19}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+array([[58.85545875],
+       [63.80062924],
+       [49.30530902],
+       [49.01473536],
+       [48.60495488],
+       [39.96834506],
+       [32.92852376],
+       [29.53520104],
+       [29.52881619],
+       [27.84679073]])
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{20}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} The query point is closest to}
+\PY{n+nb}{print}\PY{p}{(}
+    \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{The query point }\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{ is closest to the city with index }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{ and the distance between them is: }\PY{l+s+si}{\PYZpc{}0.4f}\PY{l+s+s2}{\PYZdq{}}
+    \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{query\PYZus{}point}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{argmin}\PY{p}{(}\PY{n}{dists}\PY{p}{)}\PY{p}{,} \PY{n}{dists}\PY{p}{[}\PY{n}{np}\PY{o}{.}\PY{n}{argmin}\PY{p}{(}\PY{n}{dists}\PY{p}{)}\PY{p}{]}\PY{p}{)}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+The query point [[-80, 25]] is closest to the city with index 72 and the
+distance between them is: 0.7982
+    \end{Verbatim}
+
+    
+
+    \subsection{\texorpdfstring{\(k\)-Nearest Neighbours (\(k\)-NNs)
+{[}\href{https://youtu.be/bENDqXKJLmg}{video}{]}}{k-Nearest Neighbours (k-NNs) {[}video{]}}}\label{k-nearest-neighbours-k-nns-video}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{21}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{small\PYZus{}cities} \PY{o}{=} \PY{n}{cities\PYZus{}df}\PY{o}{.}\PY{n}{sample}\PY{p}{(}\PY{l+m+mi}{30}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{90}\PY{p}{)}
+\PY{n}{one\PYZus{}city} \PY{o}{=} \PY{n}{small\PYZus{}cities}\PY{o}{.}\PY{n}{sample}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{44}\PY{p}{)}
+\PY{n}{small\PYZus{}train\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{concat}\PY{p}{(}\PY{p}{[}\PY{n}{small\PYZus{}cities}\PY{p}{,} \PY{n}{one\PYZus{}city}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{drop\PYZus{}duplicates}\PY{p}{(}\PY{n}{keep}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{22}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X\PYZus{}small\PYZus{}cities} \PY{o}{=} \PY{n}{small\PYZus{}train\PYZus{}df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{country}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{to\PYZus{}numpy}\PY{p}{(}\PY{p}{)}
+\PY{n}{y\PYZus{}small\PYZus{}cities} \PY{o}{=} \PY{n}{small\PYZus{}train\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{country}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{to\PYZus{}numpy}\PY{p}{(}\PY{p}{)}
+\PY{n}{test\PYZus{}point} \PY{o}{=} \PY{n}{one\PYZus{}city}\PY{p}{[}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{longitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{latitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{to\PYZus{}numpy}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{23}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plot\PYZus{}train\PYZus{}test\PYZus{}points}\PY{p}{(}
+    \PY{n}{X\PYZus{}small\PYZus{}cities}\PY{p}{,}
+    \PY{n}{y\PYZus{}small\PYZus{}cities}\PY{p}{,}
+    \PY{n}{test\PYZus{}point}\PY{p}{,}
+    \PY{n}{class\PYZus{}names}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Canada}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{USA}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,}
+    \PY{n}{test\PYZus{}format}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{circle}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_55_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{itemize}
+\tightlist
+\item
+  Given a new data point, predict the class of the data point by finding
+  the ``closest'' data point in the training set, i.e., by finding its
+  ``nearest neighbour'' or majority vote of nearest neighbours.
+\end{itemize}
+
+    Suppose we want to predict the class of the black point.\\
+- An intuitive way to do this is predict the same label as the
+``closest'' point (\(k = 1\)) (1-nearest neighbour) - We would predict a
+target of \textbf{USA} in this case.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{24}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plot\PYZus{}knn\PYZus{}clf}\PY{p}{(}
+    \PY{n}{X\PYZus{}small\PYZus{}cities}\PY{p}{,}
+    \PY{n}{y\PYZus{}small\PYZus{}cities}\PY{p}{,}
+    \PY{n}{test\PYZus{}point}\PY{p}{,}
+    \PY{n}{n\PYZus{}neighbors}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,}
+    \PY{n}{class\PYZus{}names}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Canada}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{USA}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,}
+    \PY{n}{test\PYZus{}format}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{circle}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+n\_neighbors 1
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_58_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    How about using \(k > 1\) to get a more robust estimate? - For example,
+we could also use the 3 closest points (\emph{k} = 3) and let them
+\textbf{vote} on the correct class.\\
+- The \textbf{Canada} class would win in this case.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{25}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plot\PYZus{}knn\PYZus{}clf}\PY{p}{(}
+    \PY{n}{X\PYZus{}small\PYZus{}cities}\PY{p}{,}
+    \PY{n}{y\PYZus{}small\PYZus{}cities}\PY{p}{,}
+    \PY{n}{test\PYZus{}point}\PY{p}{,}
+    \PY{n}{n\PYZus{}neighbors}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,}
+    \PY{n}{class\PYZus{}names}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Canada}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{USA}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,}
+    \PY{n}{test\PYZus{}format}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{circle}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+n\_neighbors 3
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_60_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{26}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{neighbors} \PY{k+kn}{import} \PY{n}{KNeighborsClassifier}
+
+\PY{n}{k\PYZus{}values} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{]}
+
+\PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n}{k\PYZus{}values}\PY{p}{:}
+    \PY{n}{neigh} \PY{o}{=} \PY{n}{KNeighborsClassifier}\PY{p}{(}\PY{n}{n\PYZus{}neighbors}\PY{o}{=}\PY{n}{k}\PY{p}{)}
+    \PY{n}{neigh}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}small\PYZus{}cities}\PY{p}{,} \PY{n}{y\PYZus{}small\PYZus{}cities}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}
+        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Prediction of the black dot with }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{ neighbours: }\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{\PYZdq{}}
+        \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{k}\PY{p}{,} \PY{n}{neigh}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{test\PYZus{}point}\PY{p}{)}\PY{p}{)}
+    \PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Prediction of the black dot with 1 neighbours: ['USA']
+Prediction of the black dot with 3 neighbours: ['Canada']
+    \end{Verbatim}
+
+    
+
+    \subsubsection{\texorpdfstring{Choosing
+\texttt{n\_neighbors}}{Choosing n\_neighbors}}\label{choosing-n_neighbors}
+
+\begin{itemize}
+\tightlist
+\item
+  The primary hyperparameter of the model is \texttt{n\_neighbors}
+  (\(k\)) which decides how many neighbours should vote during
+  prediction?
+\item
+  What happens when we play around with \texttt{n\_neighbors}?
+\item
+  Are we more likely to overfit with a low \texttt{n\_neighbors} or a
+  high \texttt{n\_neighbors}?
+\item
+  Let's examine the effect of the hyperparameter on our cities data.
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{27}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X} \PY{o}{=} \PY{n}{cities\PYZus{}df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{country}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+\PY{n}{y} \PY{o}{=} \PY{n}{cities\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{country}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+
+\PY{c+c1}{\PYZsh{} split into train and test sets}
+\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}
+    \PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.1}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{123}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{28}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{k} \PY{o}{=} \PY{l+m+mi}{1}
+\PY{n}{knn1} \PY{o}{=} \PY{n}{KNeighborsClassifier}\PY{p}{(}\PY{n}{n\PYZus{}neighbors}\PY{o}{=}\PY{n}{k}\PY{p}{)}
+\PY{n}{scores} \PY{o}{=} \PY{n}{cross\PYZus{}validate}\PY{p}{(}\PY{n}{knn1}\PY{p}{,} \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{return\PYZus{}train\PYZus{}score}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{scores}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{28}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   fit\_time  score\_time  test\_score  train\_score
+0  0.002557    0.004426    0.710526          1.0
+1  0.002147    0.001667    0.684211          1.0
+2  0.000903    0.001469    0.842105          1.0
+3  0.001034    0.001541    0.702703          1.0
+4  0.000863    0.001394    0.837838          1.0
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{29}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{k} \PY{o}{=} \PY{l+m+mi}{100}
+\PY{n}{knn100} \PY{o}{=} \PY{n}{KNeighborsClassifier}\PY{p}{(}\PY{n}{n\PYZus{}neighbors}\PY{o}{=}\PY{n}{k}\PY{p}{)}
+\PY{n}{scores} \PY{o}{=} \PY{n}{cross\PYZus{}validate}\PY{p}{(}\PY{n}{knn100}\PY{p}{,} \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{return\PYZus{}train\PYZus{}score}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{scores}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{29}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   fit\_time  score\_time  test\_score  train\_score
+0  0.002463    0.028968    0.605263     0.600000
+1  0.000971    0.002364    0.605263     0.600000
+2  0.000927    0.002328    0.605263     0.600000
+3  0.000917    0.003322    0.594595     0.602649
+4  0.000926    0.001788    0.594595     0.602649
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{30}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{f}\PY{p}{(}\PY{n}{n\PYZus{}neighbors}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+    \PY{n}{results} \PY{o}{=} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}
+    \PY{n}{knn} \PY{o}{=} \PY{n}{KNeighborsClassifier}\PY{p}{(}\PY{n}{n\PYZus{}neighbors}\PY{o}{=}\PY{n}{n\PYZus{}neighbors}\PY{p}{)}
+    \PY{n}{scores} \PY{o}{=} \PY{n}{cross\PYZus{}validate}\PY{p}{(}\PY{n}{knn}\PY{p}{,} \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{return\PYZus{}train\PYZus{}score}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+    \PY{n}{results}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{n\PYZus{}neighbours}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{p}{[}\PY{n}{n\PYZus{}neighbors}\PY{p}{]}
+    \PY{n}{results}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean\PYZus{}train\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{p}{[}\PY{n+nb}{round}\PY{p}{(}\PY{n}{scores}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{train\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{)}\PY{p}{]}
+    \PY{n}{results}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean\PYZus{}valid\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{p}{[}\PY{n+nb}{round}\PY{p}{(}\PY{n}{scores}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{test\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{)}\PY{p}{]}
+    \PY{n+nb}{print}\PY{p}{(}\PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{results}\PY{p}{)}\PY{p}{)}
+
+
+\PY{n}{f}\PY{p}{(}\PY{l+m+mi}{11}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+   n\_neighbours  mean\_train\_score  mean\_valid\_score
+0            11             0.819             0.803
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{31}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plot\PYZus{}knn\PYZus{}decision\PYZus{}boundaries}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{k\PYZus{}values}\PY{o}{=}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{11}\PY{p}{,} \PY{l+m+mi}{100}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_68_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsubsection{\texorpdfstring{How to choose
+\texttt{n\_neighbors}?}{How to choose n\_neighbors?}}\label{how-to-choose-n_neighbors}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{n\_neighbors} is a hyperparameter
+\item
+  We can use hyperparameter optimization to choose
+  \texttt{n\_neighbors}.
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{32}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{results\PYZus{}dict} \PY{o}{=} \PY{p}{\PYZob{}}
+    \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{n\PYZus{}neighbors}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{p}{[}\PY{p}{]}\PY{p}{,}
+    \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean\PYZus{}train\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{p}{[}\PY{p}{]}\PY{p}{,}
+    \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean\PYZus{}cv\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{p}{[}\PY{p}{]}\PY{p}{,}
+    \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{std\PYZus{}cv\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{p}{[}\PY{p}{]}\PY{p}{,}
+    \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{std\PYZus{}train\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{p}{[}\PY{p}{]}\PY{p}{,}
+\PY{p}{\PYZcb{}}
+\PY{n}{param\PYZus{}grid} \PY{o}{=} \PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{n\PYZus{}neighbors}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{50}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{)}\PY{p}{\PYZcb{}}
+
+\PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n}{param\PYZus{}grid}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{n\PYZus{}neighbors}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{:}
+    \PY{n}{knn} \PY{o}{=} \PY{n}{KNeighborsClassifier}\PY{p}{(}\PY{n}{n\PYZus{}neighbors}\PY{o}{=}\PY{n}{k}\PY{p}{)}
+    \PY{n}{scores} \PY{o}{=} \PY{n}{cross\PYZus{}validate}\PY{p}{(}\PY{n}{knn}\PY{p}{,} \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{return\PYZus{}train\PYZus{}score}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+    \PY{n}{results\PYZus{}dict}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{n\PYZus{}neighbors}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{k}\PY{p}{)}
+
+    \PY{n}{results\PYZus{}dict}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean\PYZus{}cv\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{scores}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{test\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+    \PY{n}{results\PYZus{}dict}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean\PYZus{}train\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{scores}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{train\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+    \PY{n}{results\PYZus{}dict}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{std\PYZus{}cv\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{scores}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{test\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+    \PY{n}{results\PYZus{}dict}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{std\PYZus{}train\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{scores}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{train\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+
+\PY{n}{results\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{results\PYZus{}dict}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{33}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{results\PYZus{}df} \PY{o}{=} \PY{n}{results\PYZus{}df}\PY{o}{.}\PY{n}{set\PYZus{}index}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{n\PYZus{}neighbors}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{results\PYZus{}df}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{33}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+             mean\_train\_score  mean\_cv\_score  std\_cv\_score  std\_train\_score
+n\_neighbors
+1                    1.000000       0.755477      0.069530         0.000000
+6                    0.831135       0.792603      0.046020         0.013433
+11                   0.819152       0.802987      0.041129         0.011336
+16                   0.801863       0.782219      0.074141         0.008735
+21                   0.777934       0.766430      0.062792         0.016944
+26                   0.755364       0.723613      0.061937         0.025910
+31                   0.743391       0.707681      0.057646         0.030408
+36                   0.728777       0.707681      0.064452         0.021305
+41                   0.706128       0.681223      0.061241         0.018310
+46                   0.694155       0.660171      0.093390         0.018178
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{34}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{results\PYZus{}df}\PY{p}{[}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean\PYZus{}train\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean\PYZus{}cv\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_72_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{35}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{best\PYZus{}n\PYZus{}neighbours} \PY{o}{=} \PY{n}{results\PYZus{}df}\PY{o}{.}\PY{n}{idxmax}\PY{p}{(}\PY{p}{)}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mean\PYZus{}cv\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{n}{best\PYZus{}n\PYZus{}neighbours}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{35}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+11
+\end{Verbatim}
+\end{tcolorbox}
+        
+    Let's try our best model on test data.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{36}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{knn} \PY{o}{=} \PY{n}{KNeighborsClassifier}\PY{p}{(}\PY{n}{n\PYZus{}neighbors}\PY{o}{=}\PY{n}{best\PYZus{}n\PYZus{}neighbours}\PY{p}{)}
+\PY{n}{knn}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Test accuracy: }\PY{l+s+si}{\PYZpc{}0.3f}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{knn}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Test accuracy: 0.905
+    \end{Verbatim}
+
+    Seems like we got lucky with the test set here.
+
+    
+
+    \subsection{❓❓ Questions for you}\label{questions-for-you}
+
+    \subsubsection{(iClicker) Exercise 3.1}\label{iclicker-exercise-3.1}
+
+\textbf{iClicker cloud join link: https://join.iclicker.com/WMSX}
+
+\textbf{Select all of the following statements which are TRUE.}
+
+\begin{itemize}
+\tightlist
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \tightlist
+  \item
+    Analogy-based models find examples from the test set that are most
+    similar to the query example we are predicting.
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \setcounter{enumi}{1}
+  \tightlist
+  \item
+    Euclidean distance will always have a non-negative value.
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \setcounter{enumi}{2}
+  \tightlist
+  \item
+    With \(k\)-NN, setting the hyperparameter \(k\) to larger values
+    typically reduces training error.
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \setcounter{enumi}{3}
+  \tightlist
+  \item
+    Similar to decision trees, \(k\)-NNs finds a small set of good
+    features.
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \setcounter{enumi}{4}
+  \tightlist
+  \item
+    In \(k\)-NN, with \(k > 1\), the classification of the closest
+    neighbour to the test example always contributes the most to the
+    prediction.
+  \end{enumerate}
+\end{itemize}
+
+    \subsection{Break (5 min)}\label{break-5-min}
+
+\includegraphics{/Users/charleenchu/Desktop/school/cpsc330-2023W2/lectures/img/eva-coffee.png}
+
+    
+
+    \subsection{\texorpdfstring{More on \(k\)-NNs
+{[}\href{https://youtu.be/IRGbqi5S9gQ}{video}{]}}{More on k-NNs {[}video{]}}}\label{more-on-k-nns-video}
+
+    \subsubsection{\texorpdfstring{Other useful arguments of
+\texttt{KNeighborsClassifier}}{Other useful arguments of KNeighborsClassifier}}\label{other-useful-arguments-of-kneighborsclassifier}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{weights} \(\rightarrow\) When predicting label, you can assign
+  higher weight to the examples which are closer to the query example.\\
+\item
+  Exercise for you: Play around with this argument. Do you get a better
+  validation score?
+\end{itemize}
+
+    \subsubsection{\texorpdfstring{Regression with \(k\)-nearest neighbours
+(\(k\)-NNs)}{Regression with k-nearest neighbours (k-NNs)}}\label{regression-with-k-nearest-neighbours-k-nns}
+
+\begin{itemize}
+\tightlist
+\item
+  Can we solve regression problems with \(k\)-nearest neighbours
+  algorithm?
+\item
+  In \(k\)-NN regression we take the average of the \(k\)-nearest
+  neighbours.
+\item
+  We can also have weighted regression.
+\end{itemize}
+
+See an example of regression in the lecture notes.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{38}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plot\PYZus{}knn\PYZus{}regression}\PY{p}{(}\PY{n}{n\PYZus{}neighbors}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_85_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{39}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plot\PYZus{}knn\PYZus{}regression}\PY{p}{(}\PY{n}{n\PYZus{}neighbors}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_86_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsubsection{\texorpdfstring{Pros of \(k\)-NNs for supervised
+learning}{Pros of k-NNs for supervised learning}}\label{pros-of-k-nns-for-supervised-learning}
+
+\begin{itemize}
+\tightlist
+\item
+  Easy to understand, interpret.
+\item
+  Simple hyperparameter \(k\) (\texttt{n\_neighbors}) controlling the
+  fundamental tradeoff.
+\item
+  Can learn very complex functions given enough data.
+\item
+  Lazy learning: Takes no time to \texttt{fit}
+\end{itemize}
+
+    \subsubsection{\texorpdfstring{Cons of \(k\)-NNs for supervised
+learning}{Cons of k-NNs for supervised learning}}\label{cons-of-k-nns-for-supervised-learning}
+
+\begin{itemize}
+\tightlist
+\item
+  Can be potentially be VERY slow during prediction time, especially
+  when the training set is very large.
+\item
+  Often not that great test accuracy compared to the modern approaches.
+\item
+  It does not work well on datasets with many features or where most
+  feature values are 0 most of the time (sparse datasets).
+\end{itemize}
+
+    \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+For regular \(k\)-NN for supervised learning (not with sparse matrices),
+you should scale your features. We'll be looking into it soon. \_\_\_
+
+    \subsubsection{(Optional) Parametric vs non
+parametric}\label{optional-parametric-vs-non-parametric}
+
+\begin{itemize}
+\tightlist
+\item
+  You might see a lot of definitions of these terms.
+\item
+  A simple way to think about this is:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    do you need to store at least \(O(n)\) worth of stuff to make
+    predictions? If so, it's non-parametric.
+  \end{itemize}
+\item
+  Non-parametric example: \(k\)-NN is a classic example of
+  non-parametric models.\\
+\item
+  Parametric example: decision stump
+\item
+  If you want to know more about this, find some reading material
+  \href{https://www.cs.ubc.ca/~schmidtm/Courses/340-F16/L6.pdf}{here},
+  \href{http://mlss.tuebingen.mpg.de/2015/slides/ghahramani/gp-neural-nets15.pdf}{here},
+  and
+  \href{https://machinelearningmastery.com/parametric-and-nonparametric-machine-learning-algorithms/}{here}.
+\item
+  By the way, the terms ``parametric'' and ``non-paramteric'' are often
+  used differently by statisticians, see
+  \href{https://help.xlstat.com/s/article/what-is-the-difference-between-a-parametric-and-a-nonparametric-test?language=en_US}{here}
+  for more\ldots{}
+\end{itemize}
+
+    \texttt{\{note\}\ \$\textbackslash{}mathcal\{O\}(n)\$\ is\ referred\ to\ as\ big\ \$\textbackslash{}mathcal\{O\}\$\ notation.\ It\ tells\ you\ how\ fast\ an\ algorithm\ is\ or\ how\ much\ storage\ space\ it\ requires.\ For\ example,\ in\ simple\ terms,\ if\ you\ have\ \$n\$\ examples\ and\ you\ need\ to\ store\ them\ all\ you\ can\ say\ that\ the\ algorithm\ requires\ \$\textbackslash{}mathcal\{O\}(n)\$\ worth\ of\ stuff.}
+
+    \subsubsection{Curse of dimensionality}\label{curse-of-dimensionality}
+
+\begin{itemize}
+\tightlist
+\item
+  Affects all learners but especially bad for nearest-neighbour.
+\item
+  \(k\)-NN usually works well when the number of dimensions \(d\) is
+  small but things fall apart quickly as \(d\) goes up.
+\item
+  If there are many irrelevant attributes, \(k\)-NN is hopelessly
+  confused because all of them contribute to finding similarity between
+  examples.
+\item
+  With enough irrelevant attributes the accidental similarity swamps out
+  meaningful similarity and \(k\)-NN is no better than random guessing.
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{40}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{datasets} \PY{k+kn}{import} \PY{n}{make\PYZus{}classification}
+
+\PY{n}{nfeats\PYZus{}accuracy} \PY{o}{=} \PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{nfeats}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{p}{[}\PY{p}{]}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{dummy\PYZus{}valid\PYZus{}accuracy}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{p}{[}\PY{p}{]}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{KNN\PYZus{}valid\PYZus{}accuracy}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{p}{[}\PY{p}{]}\PY{p}{\PYZcb{}}
+\PY{k}{for} \PY{n}{n\PYZus{}feats} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{2000}\PY{p}{,} \PY{l+m+mi}{100}\PY{p}{)}\PY{p}{:}
+    \PY{n}{X}\PY{p}{,} \PY{n}{y} \PY{o}{=} \PY{n}{make\PYZus{}classification}\PY{p}{(}\PY{n}{n\PYZus{}samples}\PY{o}{=}\PY{l+m+mi}{2000}\PY{p}{,} \PY{n}{n\PYZus{}features}\PY{o}{=}\PY{n}{n\PYZus{}feats}\PY{p}{,} \PY{n}{n\PYZus{}classes}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}
+    \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}
+        \PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.2}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{123}
+    \PY{p}{)}
+    \PY{n}{dummy} \PY{o}{=} \PY{n}{DummyClassifier}\PY{p}{(}\PY{n}{strategy}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{most\PYZus{}frequent}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{dummy\PYZus{}scores} \PY{o}{=} \PY{n}{cross\PYZus{}validate}\PY{p}{(}\PY{n}{dummy}\PY{p}{,} \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{return\PYZus{}train\PYZus{}score}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+
+    \PY{n}{knn} \PY{o}{=} \PY{n}{KNeighborsClassifier}\PY{p}{(}\PY{p}{)}
+    \PY{n}{scores} \PY{o}{=} \PY{n}{cross\PYZus{}validate}\PY{p}{(}\PY{n}{knn}\PY{p}{,} \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{return\PYZus{}train\PYZus{}score}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+    \PY{n}{nfeats\PYZus{}accuracy}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{nfeats}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{n\PYZus{}feats}\PY{p}{)}
+    \PY{n}{nfeats\PYZus{}accuracy}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{KNN\PYZus{}valid\PYZus{}accuracy}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{scores}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{test\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+    \PY{n}{nfeats\PYZus{}accuracy}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{dummy\PYZus{}valid\PYZus{}accuracy}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{dummy\PYZus{}scores}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{test\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{41}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{nfeats\PYZus{}accuracy}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{41}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+    nfeats  dummy\_valid\_accuracy  KNN\_valid\_accuracy
+0        4              0.506250            0.974375
+1      104              0.506875            0.745625
+2      204              0.499375            0.771250
+3      304              0.506250            0.645000
+4      404              0.503750            0.695000
+5      504              0.501875            0.626250
+6      604              0.510000            0.653125
+7      704              0.503125            0.611875
+8      804              0.505625            0.580625
+9      904              0.503125            0.638750
+10    1004              0.500625            0.597500
+11    1104              0.504375            0.586875
+12    1204              0.503125            0.576875
+13    1304              0.503125            0.590000
+14    1404              0.503750            0.581875
+15    1504              0.502500            0.593750
+16    1604              0.505625            0.588125
+17    1704              0.501250            0.612500
+18    1804              0.501250            0.610625
+19    1904              0.506250            0.583750
+\end{Verbatim}
+\end{tcolorbox}
+        
+    
+
+    \subsection{\texorpdfstring{Support Vector Machines (SVMs) with RBF
+kernel
+{[}\href{https://youtu.be/ic_zqOhi020}{video}{]}}{Support Vector Machines (SVMs) with RBF kernel {[}video{]}}}\label{support-vector-machines-svms-with-rbf-kernel-video}
+
+\begin{itemize}
+\tightlist
+\item
+  Very high-level overview
+\item
+  Our goals here are
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Use \texttt{scikit-learn}'s SVM model.
+  \item
+    Broadly explain the notion of support vectors.\\
+  \item
+    Broadly explain the similarities and differences between \(k\)-NNs
+    and SVM RBFs.
+  \item
+    Explain how \texttt{C} and \texttt{gamma} hyperparameters control
+    the fundamental tradeoff.
+  \end{itemize}
+\end{itemize}
+
+\begin{quote}
+(Optional) RBF stands for radial basis functions. We won't go into what
+it means in this video. Refer to
+\href{https://www.youtube.com/watch?v=Qc5IyLW_hns}{this video} if you
+want to know more.
+\end{quote}
+
+    \subsubsection{Overview}\label{overview}
+
+\begin{itemize}
+\tightlist
+\item
+  Another popular similarity-based algorithm is Support Vector Machines
+  with RBF Kernel (SVM RBFs)
+\item
+  Superficially, SVM RBFs are more like weighted \(k\)-NNs.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The decision boundary is defined by \textbf{a set of positive and
+    negative examples} and \textbf{their weights} together with
+    \textbf{their similarity measure}.
+  \item
+    A test example is labeled positive if on average it looks more like
+    positive examples than the negative examples.
+  \end{itemize}
+\end{itemize}
+
+    \begin{itemize}
+\tightlist
+\item
+  The primary difference between \(k\)-NNs and SVM RBFs is that
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Unlike \(k\)-NNs, SVM RBFs only remember the key examples (support
+    vectors).
+  \item
+    SVMs use a different similarity metric which is called a ``kernel''.
+    A popular kernel is Radial Basis Functions (RBFs)
+  \item
+    They usually perform better than \(k\)-NNs!
+  \end{itemize}
+\end{itemize}
+
+    \subsubsection{Let's explore SVM RBFs}\label{lets-explore-svm-rbfs}
+
+Let's try SVMs on the cities dataset.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{42}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{mglearn\PYZus{}utils}\PY{o}{.}\PY{n}{discrete\PYZus{}scatter}\PY{p}{(}\PY{n}{X\PYZus{}cities}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{n}{X\PYZus{}cities}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{y\PYZus{}cities}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{longitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{latitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{n}{loc}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_100_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{43}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}
+    \PY{n}{X\PYZus{}cities}\PY{p}{,} \PY{n}{y\PYZus{}cities}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.2}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{123}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{44}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{knn} \PY{o}{=} \PY{n}{KNeighborsClassifier}\PY{p}{(}\PY{n}{n\PYZus{}neighbors}\PY{o}{=}\PY{n}{best\PYZus{}n\PYZus{}neighbours}\PY{p}{)}
+\PY{n}{scores} \PY{o}{=} \PY{n}{cross\PYZus{}validate}\PY{p}{(}\PY{n}{knn}\PY{p}{,} \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{return\PYZus{}train\PYZus{}score}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mean validation score }\PY{l+s+si}{\PYZpc{}0.3f}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{scores}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{test\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{scores}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Mean validation score 0.803
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{44}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   fit\_time  score\_time  test\_score  train\_score
+0  0.004504    0.005764    0.794118     0.819549
+1  0.001253    0.001671    0.764706     0.819549
+2  0.000985    0.001486    0.727273     0.850746
+3  0.000888    0.001459    0.787879     0.828358
+4  0.000908    0.001487    0.939394     0.783582
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{45}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{svm} \PY{k+kn}{import} \PY{n}{SVC}
+
+\PY{n}{svm} \PY{o}{=} \PY{n}{SVC}\PY{p}{(}\PY{n}{gamma}\PY{o}{=}\PY{l+m+mf}{0.01}\PY{p}{)}  \PY{c+c1}{\PYZsh{} Ignore gamma for now}
+\PY{n}{scores} \PY{o}{=} \PY{n}{cross\PYZus{}validate}\PY{p}{(}\PY{n}{svm}\PY{p}{,} \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{return\PYZus{}train\PYZus{}score}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mean validation score }\PY{l+s+si}{\PYZpc{}0.3f}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{scores}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{test\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{scores}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Mean validation score 0.820
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{45}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   fit\_time  score\_time  test\_score  train\_score
+0  0.007640    0.002785    0.823529     0.842105
+1  0.002896    0.001233    0.823529     0.842105
+2  0.001268    0.000708    0.727273     0.858209
+3  0.001143    0.000745    0.787879     0.843284
+4  0.001191    0.000718    0.939394     0.805970
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \subsubsection{Decision boundary of
+SVMs}\label{decision-boundary-of-svms}
+
+\begin{itemize}
+\tightlist
+\item
+  We can think of SVM with RBF kernel as ``smooth KNN''.
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{48}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{fig}\PY{p}{,} \PY{n}{axes} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{16}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+
+\PY{k}{for} \PY{n}{clf}\PY{p}{,} \PY{n}{ax} \PY{o+ow}{in} \PY{n+nb}{zip}\PY{p}{(}\PY{p}{[}\PY{n}{knn}\PY{p}{,} \PY{n}{svm}\PY{p}{]}\PY{p}{,} \PY{n}{axes}\PY{p}{)}\PY{p}{:}
+    \PY{n}{clf}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+    \PY{n}{plot\PYZus{}2d\PYZus{}separator}\PY{p}{(}
+        \PY{n}{clf}\PY{p}{,} \PY{n}{X\PYZus{}train}\PY{o}{.}\PY{n}{to\PYZus{}numpy}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n}{fill}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{eps}\PY{o}{=}\PY{l+m+mf}{0.5}\PY{p}{,} \PY{n}{ax}\PY{o}{=}\PY{n}{ax}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.4}
+    \PY{p}{)}
+    \PY{n}{mglearn\PYZus{}utils}\PY{o}{.}\PY{n}{discrete\PYZus{}scatter}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{n}{X\PYZus{}train}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{ax}\PY{o}{=}\PY{n}{ax}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{n}{clf}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{longitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{latitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_105_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsubsection{Support vectors}\label{support-vectors}
+
+\begin{itemize}
+\item
+  Each training example either is or isn't a ``support vector''.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    This gets decided during \texttt{fit}.
+  \end{itemize}
+\item
+  \textbf{Main insight: the decision boundary only depends on the
+  support vectors.}
+\item
+  Let's look at the support vectors.
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{49}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{datasets} \PY{k+kn}{import} \PY{n}{make\PYZus{}blobs}
+
+\PY{n}{n} \PY{o}{=} \PY{l+m+mi}{20}
+\PY{n}{n\PYZus{}classes} \PY{o}{=} \PY{l+m+mi}{2}
+\PY{n}{X\PYZus{}toy}\PY{p}{,} \PY{n}{y\PYZus{}toy} \PY{o}{=} \PY{n}{make\PYZus{}blobs}\PY{p}{(}
+    \PY{n}{n\PYZus{}samples}\PY{o}{=}\PY{n}{n}\PY{p}{,} \PY{n}{centers}\PY{o}{=}\PY{n}{n\PYZus{}classes}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{300}
+\PY{p}{)}  \PY{c+c1}{\PYZsh{} Let\PYZsq{}s generate some fake data}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{51}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{mglearn}\PY{o}{.}\PY{n}{discrete\PYZus{}scatter}\PY{p}{(}\PY{n}{X\PYZus{}toy}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{n}{X\PYZus{}toy}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{y\PYZus{}toy}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Feature 0}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Feature 1}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{svm} \PY{o}{=} \PY{n}{SVC}\PY{p}{(}\PY{n}{kernel}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{rbf}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{C}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,} \PY{n}{gamma}\PY{o}{=}\PY{l+m+mf}{0.1}\PY{p}{)}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}toy}\PY{p}{,} \PY{n}{y\PYZus{}toy}\PY{p}{)}
+\PY{n}{plot\PYZus{}2d\PYZus{}separator}\PY{p}{(}\PY{n}{svm}\PY{p}{,} \PY{n}{X\PYZus{}toy}\PY{p}{,} \PY{n}{fill}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{eps}\PY{o}{=}\PY{l+m+mf}{0.5}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.4}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_108_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{52}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{svm}\PY{o}{.}\PY{n}{support\PYZus{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{52}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+array([ 3,  8,  9, 14, 19,  1,  4,  6, 17], dtype=int32)
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{53}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plot\PYZus{}support\PYZus{}vectors}\PY{p}{(}\PY{n}{svm}\PY{p}{,} \PY{n}{X\PYZus{}toy}\PY{p}{,} \PY{n}{y\PYZus{}toy}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_110_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    The support vectors are the bigger points in the plot above.
+
+    \subsubsection{Hyperparameters of SVM}\label{hyperparameters-of-svm}
+
+\begin{itemize}
+\tightlist
+\item
+  Key hyperparameters of \texttt{rbf} SVM are
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{gamma}
+  \item
+    \texttt{C}
+  \end{itemize}
+\item
+  We are not equipped to understand the meaning of these parameters at
+  this point but you are expected to describe their relation to the
+  fundamental tradeoff.
+\end{itemize}
+
+See
+\href{https://scikit-learn.org/stable/auto_examples/svm/plot_rbf_parameters.html}{\texttt{scikit-learn}'s
+explanation of RBF SVM parameters}.
+
+    \subsubsection{\texorpdfstring{Relation of \texttt{gamma} and the
+fundamental
+trade-off}{Relation of gamma and the fundamental trade-off}}\label{relation-of-gamma-and-the-fundamental-trade-off}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{gamma} controls the complexity (fundamental trade-off), just
+  like other hyperparameters we've seen.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    larger \texttt{gamma} \(\rightarrow\) more complex
+  \item
+    smaller \texttt{gamma} \(\rightarrow\) less complex
+  \end{itemize}
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{54}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{gamma} \PY{o}{=} \PY{p}{[}\PY{l+m+mf}{0.001}\PY{p}{,} \PY{l+m+mf}{0.01}\PY{p}{,} \PY{l+m+mf}{0.1}\PY{p}{,} \PY{l+m+mf}{1.0}\PY{p}{,} \PY{l+m+mf}{10.0}\PY{p}{]}
+\PY{n}{plot\PYZus{}svc\PYZus{}gamma}\PY{p}{(}
+    \PY{n}{gamma}\PY{p}{,}
+    \PY{n}{X\PYZus{}train}\PY{o}{.}\PY{n}{to\PYZus{}numpy}\PY{p}{(}\PY{p}{)}\PY{p}{,}
+    \PY{n}{y\PYZus{}train}\PY{o}{.}\PY{n}{to\PYZus{}numpy}\PY{p}{(}\PY{p}{)}\PY{p}{,}
+    \PY{n}{x\PYZus{}label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{longitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+    \PY{n}{y\PYZus{}label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{latitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_114_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsubsection{\texorpdfstring{Relation of \texttt{C} and the
+fundamental
+trade-off}{Relation of C and the fundamental trade-off}}\label{relation-of-c-and-the-fundamental-trade-off}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{C} \emph{also} affects the fundamental tradeoff
+
+  \begin{itemize}
+  \tightlist
+  \item
+    larger \texttt{C} \(\rightarrow\) more complex
+  \item
+    smaller \texttt{C} \(\rightarrow\) less complex
+  \end{itemize}
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{55}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{C} \PY{o}{=} \PY{p}{[}\PY{l+m+mf}{0.1}\PY{p}{,} \PY{l+m+mf}{1.0}\PY{p}{,} \PY{l+m+mf}{100.0}\PY{p}{,} \PY{l+m+mf}{1000.0}\PY{p}{,} \PY{l+m+mf}{100000.0}\PY{p}{]}
+\PY{n}{plot\PYZus{}svc\PYZus{}C}\PY{p}{(}
+    \PY{n}{C}\PY{p}{,} \PY{n}{X\PYZus{}train}\PY{o}{.}\PY{n}{to\PYZus{}numpy}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{o}{.}\PY{n}{to\PYZus{}numpy}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n}{x\PYZus{}label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{longitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{y\PYZus{}label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{latitude}\PY{l+s+s2}{\PYZdq{}}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_116_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsubsection{Search over multiple
+hyperparameters}\label{search-over-multiple-hyperparameters}
+
+\begin{itemize}
+\tightlist
+\item
+  So far you have seen how to carry out search over a hyperparameter
+\item
+  In the above case the best training error is achieved by the most
+  complex model (large \texttt{gamma}, large \texttt{C}).
+\item
+  Best validation error requires a hyperparameter search to balance the
+  fundamental tradeoff.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    In general we can't search them one at a time.
+  \item
+    More on this next week. But if you cannot wait till then, you may
+    look up the following:
+
+    \begin{itemize}
+    \tightlist
+    \item
+      \href{https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html}{sklearn.model\_selection.GridSearchCV}
+    \item
+      \href{https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html}{sklearn.model\_selection.RandomizedSearchCV}
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+    \subsubsection{SVM Regressor}\label{svm-regressor}
+
+\begin{itemize}
+\tightlist
+\item
+  Similar to KNNs, you can use SVMs for regression problems as well.
+\item
+  See
+  \href{https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html}{\texttt{sklearn.svm.SVR}}
+  for more details.
+\end{itemize}
+
+    \subsection{❓❓ Questions for you}\label{questions-for-you}
+
+    \subsection{(iClicker) Exercise 3.2}\label{iclicker-exercise-3.2}
+
+\textbf{iClicker cloud join link: https://join.iclicker.com/WMSX}
+
+\textbf{Select all of the following statements which are TRUE.}
+
+\begin{itemize}
+\tightlist
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \tightlist
+  \item
+    \(k\)-NN may perform poorly in high-dimensional space (say, \emph{d}
+    \textgreater{} 1000).
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \setcounter{enumi}{1}
+  \tightlist
+  \item
+    In SVM RBF, removing a non-support vector would not change the
+    decision boundary.
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \setcounter{enumi}{2}
+  \tightlist
+  \item
+    In sklearn's SVC classifier, large values of gamma tend to result in
+    higher training score but probably lower validation score.
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \setcounter{enumi}{3}
+  \tightlist
+  \item
+    If we increase both gamma and C, we can't be certain if the model
+    becomes more complex or less complex.
+  \end{enumerate}
+\end{itemize}
+
+    \paragraph{More practice questions}\label{more-practice-questions}
+
+\begin{itemize}
+\tightlist
+\item
+  Check out some more practice questions
+  \href{https://ml-learn.mds.ubc.ca/en/module4}{here}.
+\end{itemize}
+
+    \subsection{Summary}\label{summary}
+
+\begin{itemize}
+\tightlist
+\item
+  We have KNNs and SVMs as new supervised learning techniques in our
+  toolbox.
+\item
+  These are analogy-based learners and the idea is to assign nearby
+  points the same label.
+\item
+  Unlike decision trees, all features are equally important.
+\item
+  Both can be used for classification or regression (much like the other
+  methods we've seen).
+\end{itemize}
+
+    \subsubsection{Coming up:}\label{coming-up}
+
+Lingering questions: - Are we ready to do machine learning on real-world
+datasets? - What would happen if we use \(k\)-NNs or SVM RBFs on the
+spotify dataset from hw1?\\
+- What happens if we have missing values in our data? - What do we do if
+we have features with categories or string values?
+
+    \includegraphics{/Users/charleenchu/Desktop/school/cpsc330-2023W2/lectures/img/eva-seeyou.png}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}

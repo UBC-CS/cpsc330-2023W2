@@ -1,0 +1,2604 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+
+    \usepackage{iftex}
+    \ifPDFTeX
+        \usepackage[T1]{fontenc}
+        \IfFileExists{alphabeta.sty}{
+              \usepackage{alphabeta}
+          }{
+              \usepackage[mathletters]{ucs}
+              \usepackage[utf8x]{inputenc}
+          }
+    \else
+        \usepackage{fontspec}
+        \usepackage{unicode-math}
+    \fi
+
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage{array}     % table support for pandoc >= 2.11.3
+    \usepackage{calc}      % table minipage width calculation for pandoc >= 2.11.1
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{soul}      % strikethrough (\st) support for pandoc >= 3.0.0
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+
+
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{05\_preprocessing-pipelines}
+    
+    
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.61,0.40,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.80,0.25,0.22}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.46,0.46,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.41,0.47,0.13}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.36,0.12}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.52,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{0.89,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@ges}{\let\PY@bf=\textbf\let\PY@it=\textit}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb.
+    \makeatletter
+        \newbox\Wrappedcontinuationbox
+        \newbox\Wrappedvisiblespacebox
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}}
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}}
+        \newcommand*\Wrappedcontinuationindent {3ex }
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox}
+        % Take advantage of the already applied Pygments mark-up to insert
+        % potential linebreaks for TeX processing.
+        %        {, <, #, %, $, ' and ": go to next line.
+        %        _, }, ^, &, >, - and ~: stay at end of broken line.
+        % Use of \textquotesingle for straight quote.
+        \newcommand*\Wrappedbreaksatspecials {%
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}%
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}%
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}%
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}%
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}%
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}%
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}%
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}%
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}%
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}%
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}%
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}%
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}%
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}%
+        }
+        % Some characters . , ; ? ! / are not pygmentized.
+        % This macro makes them "active" and they will insert potential linebreaks
+        \newcommand*\Wrappedbreaksatpunct {%
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}%
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}%
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}%
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}%
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}%
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}%
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}%
+            \catcode`\.\active
+            \catcode`\,\active
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active
+            \lccode`\~`\~
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \includegraphics{/Users/charleenchu/Desktop/school/cpsc330-2023W2/lectures/img/330-banner.png}
+
+    \section{\texorpdfstring{Lecture 5: Preprocessing and \texttt{sklearn}
+pipelines}{Lecture 5: Preprocessing and sklearn pipelines}}\label{lecture-5-preprocessing-and-sklearn-pipelines}
+
+UBC 2023-24
+
+Instructors: Mathias Lécuyer and Mehrdad Oveisi
+
+    \subsubsection{Announcements}\label{announcements}
+
+\begin{itemize}
+\tightlist
+\item
+  HW1 grades will be posted within 2 weeks (PL issues, next HWs should
+  be faster).
+\item
+  Homework 1 solutions will be on Canvas under the Files tab. Please do
+  not share them with anyone or do not post them anywhere.
+\item
+  HW3 is released (due Feb.~5)
+\end{itemize}
+
+    \subsection{Imports, announcement, LOs}\label{imports-announcement-los}
+
+    \subsubsection{Imports}\label{imports}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{sys}
+\PY{k+kn}{import} \PY{n+nn}{time}
+
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+
+\PY{o}{\PYZpc{}}\PY{k}{matplotlib} inline
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+\PY{k+kn}{from} \PY{n+nn}{IPython}\PY{n+nn}{.}\PY{n+nn}{display} \PY{k+kn}{import} \PY{n}{HTML}
+
+\PY{n}{sys}\PY{o}{.}\PY{n}{path}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../code/.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+\PY{k+kn}{from} \PY{n+nn}{IPython}\PY{n+nn}{.}\PY{n+nn}{display} \PY{k+kn}{import} \PY{n}{display}
+\PY{k+kn}{from} \PY{n+nn}{plotting\PYZus{}functions} \PY{k+kn}{import} \PY{o}{*}
+
+\PY{c+c1}{\PYZsh{} Classifiers and regressors}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{dummy} \PY{k+kn}{import} \PY{n}{DummyClassifier}\PY{p}{,} \PY{n}{DummyRegressor}
+
+\PY{c+c1}{\PYZsh{} Preprocessing and pipeline}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{impute} \PY{k+kn}{import} \PY{n}{SimpleImputer}
+
+\PY{c+c1}{\PYZsh{} train test split and cross validation}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k+kn}{import} \PY{n}{cross\PYZus{}val\PYZus{}score}\PY{p}{,} \PY{n}{cross\PYZus{}validate}\PY{p}{,} \PY{n}{train\PYZus{}test\PYZus{}split}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{neighbors} \PY{k+kn}{import} \PY{n}{KNeighborsClassifier}\PY{p}{,} \PY{n}{KNeighborsRegressor}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{pipeline} \PY{k+kn}{import} \PY{n}{Pipeline}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{preprocessing} \PY{k+kn}{import} \PY{p}{(}
+    \PY{n}{MinMaxScaler}\PY{p}{,}
+    \PY{n}{OneHotEncoder}\PY{p}{,}
+    \PY{n}{OrdinalEncoder}\PY{p}{,}
+    \PY{n}{StandardScaler}\PY{p}{,}
+\PY{p}{)}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{svm} \PY{k+kn}{import} \PY{n}{SVC}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{tree} \PY{k+kn}{import} \PY{n}{DecisionTreeClassifier}
+\PY{k+kn}{from} \PY{n+nn}{utils} \PY{k+kn}{import} \PY{o}{*}
+\PY{k+kn}{import} \PY{n+nn}{mglearn\PYZus{}utils}
+
+\PY{n}{pd}\PY{o}{.}\PY{n}{set\PYZus{}option}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{display.max\PYZus{}colwidth}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+m+mi}{200}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsubsection{Learning outcomes}\label{learning-outcomes}
+
+From this lecture, you will be able to
+
+\begin{itemize}
+\tightlist
+\item
+  explain motivation for preprocessing in supervised machine learning;
+\item
+  identify when to implement feature transformations such as imputation,
+  scaling, and one-hot encoding in a machine learning model development
+  pipeline;
+\item
+  use \texttt{sklearn} transformers for applying feature transformations
+  on your dataset;
+\item
+  discuss golden rule in the context of feature transformations;
+\item
+  use \texttt{sklearn.pipeline.Pipeline} and
+  \texttt{sklearn.pipeline.make\_pipeline} to build a preliminary
+  machine learning pipeline.
+\end{itemize}
+
+    
+
+    \subsection{❓❓ Questions for you}\label{questions-for-you}
+
+    \subsubsection{(iClicker) Exercise 5.1}\label{iclicker-exercise-5.1}
+
+\textbf{iClicker cloud join link: https://join.iclicker.com/WMSX}
+
+Take a guess: In your machine learning project, how much time will you
+typically spend on data preparation and transformation?
+
+\begin{itemize}
+\tightlist
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \tightlist
+  \item
+    \textasciitilde80\% of the project time
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \setcounter{enumi}{1}
+  \tightlist
+  \item
+    \textasciitilde20\% of the project time
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \setcounter{enumi}{2}
+  \tightlist
+  \item
+    \textasciitilde50\% of the project time
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \setcounter{enumi}{3}
+  \tightlist
+  \item
+    None. Most of the time will be spent on model building
+  \end{enumerate}
+\end{itemize}
+
+The question is adapted from
+\href{https://developers.google.com/machine-learning/data-prep/process}{here}.
+
+    
+
+    \subsection{\texorpdfstring{Motivation and big picture
+{[}\href{https://youtu.be/xx9HlmzORRk}{video}{]}}{Motivation and big picture {[}video{]}}}\label{motivation-and-big-picture-video}
+
+    \begin{itemize}
+\tightlist
+\item
+  So far we have seen
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Three ML models (decision trees, \(k\)-NNs, SVMs with RBF kernel)
+  \item
+    ML fundamentals (train-validation-test split, cross-validation, the
+    fundamental tradeoff, the golden rule)
+  \end{itemize}
+\item
+  Are we ready to do machine learning on real-world datasets?
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Very often real-world datasets need preprocessing before we use them
+    to build ML models.
+  \end{itemize}
+\end{itemize}
+
+    \subsubsection{\texorpdfstring{Example: \(k\)-nearest neighbours on the
+Spotify
+dataset}{Example: k-nearest neighbours on the Spotify dataset}}\label{example-k-nearest-neighbours-on-the-spotify-dataset}
+
+\begin{itemize}
+\tightlist
+\item
+  In lab1 you used \texttt{DecisionTreeClassifier} to predict whether
+  the user would like a particular song or not.
+\item
+  Can we use \(k\)-NN classifier for this task?
+\item
+  Intuition: To predict whether the user likes a particular song or not
+  (query point)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    find the songs that are closest to the query point
+  \item
+    let them vote on the target
+  \item
+    take the majority vote as the target for the query point
+  \end{itemize}
+\end{itemize}
+
+    In order to run the code below, you need to download the dataset from
+\href{https://www.kaggle.com/geomack/spotifyclassification/download}{Kaggle}.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{spotify\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../data/spotify.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{index\PYZus{}col}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}
+\PY{n}{train\PYZus{}df}\PY{p}{,} \PY{n}{test\PYZus{}df} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}\PY{n}{spotify\PYZus{}df}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.20}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{123}\PY{p}{)}
+\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train} \PY{o}{=} \PY{p}{(}
+    \PY{n}{train\PYZus{}df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{song\PYZus{}title}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{artist}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{target}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{p}{,}
+    \PY{n}{train\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{target}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,}
+\PY{p}{)}
+\PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{p}{(}
+    \PY{n}{test\PYZus{}df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{song\PYZus{}title}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{artist}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{target}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{p}{,}
+    \PY{n}{test\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{target}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{dummy} \PY{o}{=} \PY{n}{DummyClassifier}\PY{p}{(}\PY{n}{strategy}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{most\PYZus{}frequent}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{scores} \PY{o}{=} \PY{n}{cross\PYZus{}validate}\PY{p}{(}\PY{n}{dummy}\PY{p}{,} \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{return\PYZus{}train\PYZus{}score}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mean validation score }\PY{l+s+si}{\PYZpc{}0.3f}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{scores}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{test\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{scores}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Mean validation score 0.508
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   fit\_time  score\_time  test\_score  train\_score
+0  0.001364    0.000817    0.507740     0.507752
+1  0.000753    0.000581    0.507740     0.507752
+2  0.000689    0.000583    0.507740     0.507752
+3  0.000862    0.000766    0.506211     0.508133
+4  0.000814    0.000737    0.509317     0.507359
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{knn} \PY{o}{=} \PY{n}{KNeighborsClassifier}\PY{p}{(}\PY{p}{)}
+\PY{n}{scores} \PY{o}{=} \PY{n}{cross\PYZus{}validate}\PY{p}{(}\PY{n}{knn}\PY{p}{,} \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{return\PYZus{}train\PYZus{}score}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mean validation score }\PY{l+s+si}{\PYZpc{}0.3f}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{scores}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{test\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{scores}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Mean validation score 0.546
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   fit\_time  score\_time  test\_score  train\_score
+0  0.003544    0.018222    0.563467     0.717829
+1  0.001210    0.005395    0.535604     0.721705
+2  0.001226    0.005697    0.529412     0.708527
+3  0.001109    0.005121    0.537267     0.721921
+4  0.000968    0.005042    0.562112     0.711077
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{two\PYZus{}songs} \PY{o}{=} \PY{n}{X\PYZus{}train}\PY{o}{.}\PY{n}{sample}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{42}\PY{p}{)}
+\PY{n}{two\PYZus{}songs}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+     acousticness  danceability  duration\_ms  energy  instrumentalness  key  \textbackslash{}
+842      0.229000         0.494       147893   0.666          0.000057    9
+654      0.000289         0.771       227143   0.949          0.602000    8
+
+     liveness  loudness  mode  speechiness    tempo  time\_signature  valence
+842    0.0469    -9.743     0       0.0351  140.832             4.0    0.704
+654    0.5950    -4.712     1       0.1750  111.959             4.0    0.372
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{euclidean\PYZus{}distances}\PY{p}{(}\PY{n}{two\PYZus{}songs}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+array([[    0.        , 79250.00543825],
+       [79250.00543825,     0.        ]])
+\end{Verbatim}
+\end{tcolorbox}
+        
+    Let's consider only two features: \texttt{duration\_ms} and
+\texttt{tempo}.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{two\PYZus{}songs\PYZus{}subset} \PY{o}{=} \PY{n}{two\PYZus{}songs}\PY{p}{[}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{duration\PYZus{}ms}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{tempo}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{]}
+\PY{n}{two\PYZus{}songs\PYZus{}subset}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+     duration\_ms    tempo
+842       147893  140.832
+654       227143  111.959
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{euclidean\PYZus{}distances}\PY{p}{(}\PY{n}{two\PYZus{}songs\PYZus{}subset}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+array([[    0.        , 79250.00525962],
+       [79250.00525962,     0.        ]])
+\end{Verbatim}
+\end{tcolorbox}
+        
+    Do you see any problem?
+
+    \begin{itemize}
+\tightlist
+\item
+  The distance is completely dominated by the the features with larger
+  values
+\item
+  The features with smaller values are being ignored.
+\item
+  Does it matter?
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Yes! Scale is based on how data was collected.
+  \item
+    Features on a smaller scale can be highly informative and there is
+    no good reason to ignore them.
+  \item
+    We want our model to be robust and not sensitive to the scale.
+  \end{itemize}
+\item
+  Was this a problem for decision trees?
+\end{itemize}
+
+    \subsubsection{\texorpdfstring{Scaling using \texttt{scikit-learn}'s
+\href{https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html}{\texttt{StandardScaler}}}{Scaling using scikit-learn's StandardScaler}}\label{scaling-using-scikit-learns-standardscaler}
+
+\begin{itemize}
+\tightlist
+\item
+  We'll use \texttt{scikit-learn}'s
+  \href{https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html}{\texttt{StandardScaler}},
+  which is a \texttt{transformer}.\\
+\item
+  Only focus on the syntax for now. We'll talk about scaling in a bit.
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{preprocessing} \PY{k+kn}{import} \PY{n}{StandardScaler}
+
+\PY{n}{scaler} \PY{o}{=} \PY{n}{StandardScaler}\PY{p}{(}\PY{p}{)}  \PY{c+c1}{\PYZsh{} create feature trasformer object}
+\PY{n}{scaler}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{)}  \PY{c+c1}{\PYZsh{} fitting the transformer on the train split}
+\PY{n}{X\PYZus{}train\PYZus{}scaled} \PY{o}{=} \PY{n}{scaler}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{)}  \PY{c+c1}{\PYZsh{} transforming the train split}
+\PY{n}{X\PYZus{}test\PYZus{}scaled} \PY{o}{=} \PY{n}{scaler}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}  \PY{c+c1}{\PYZsh{} transforming the test split}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X\PYZus{}train} \PY{c+c1}{\PYZsh{} original X\PYZus{}train}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+      acousticness  danceability  duration\_ms  energy  instrumentalness  key  \textbackslash{}
+1505      0.004770         0.585       214740   0.614          0.000155   10
+813       0.114000         0.665       216728   0.513          0.303000    0
+615       0.030200         0.798       216585   0.481          0.000000    7
+319       0.106000         0.912       194040   0.317          0.000208    6
+320       0.021100         0.697       236456   0.905          0.893000    6
+{\ldots}            {\ldots}           {\ldots}          {\ldots}     {\ldots}               {\ldots}  {\ldots}
+2012      0.001060         0.584       274404   0.932          0.002690    1
+1346      0.000021         0.535       203500   0.974          0.000149   10
+1406      0.503000         0.410       256333   0.648          0.000000    7
+1389      0.705000         0.894       222307   0.161          0.003300    4
+1534      0.623000         0.470       394920   0.156          0.187000    2
+
+      liveness  loudness  mode  speechiness    tempo  time\_signature  valence
+1505    0.0762    -5.594     0       0.0370  114.059             4.0   0.2730
+813     0.1220    -7.314     1       0.3310  100.344             3.0   0.0373
+615     0.1280   -10.488     1       0.3140  127.136             4.0   0.6400
+319     0.0723   -12.719     0       0.0378   99.346             4.0   0.9490
+320     0.1190    -7.787     0       0.0339  119.977             4.0   0.3110
+{\ldots}        {\ldots}       {\ldots}   {\ldots}          {\ldots}      {\ldots}             {\ldots}      {\ldots}
+2012    0.1290    -3.501     1       0.3330   74.976             4.0   0.2110
+1346    0.2630    -3.566     0       0.1720  116.956             4.0   0.4310
+1406    0.2190    -4.469     1       0.0362   60.391             4.0   0.3420
+1389    0.3120   -14.311     1       0.0880  104.968             4.0   0.8180
+1534    0.1040   -17.036     1       0.0399  118.176             4.0   0.0591
+
+[1613 rows x 13 columns]
+\end{Verbatim}
+\end{tcolorbox}
+        
+    Let's examine transformed value of the energy feature in the first row.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X\PYZus{}train}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{energy}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} 
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+0.614
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{energy}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{energy}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{o}{/} \PY{n}{X\PYZus{}train}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{energy}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+-0.3180174485124284
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{X\PYZus{}train\PYZus{}scaled}\PY{p}{,} \PY{n}{columns}\PY{o}{=}\PY{n}{X\PYZus{}train}\PY{o}{.}\PY{n}{columns}\PY{p}{,} \PY{n}{index}\PY{o}{=}\PY{n}{X\PYZus{}train}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{round}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+      acousticness  danceability  duration\_ms  energy  instrumentalness  \textbackslash{}
+1505        -0.698        -0.195       -0.399  -0.318            -0.492
+813         -0.276         0.296       -0.374  -0.796             0.598
+615         -0.600         1.111       -0.376  -0.947            -0.493
+319         -0.307         1.809       -0.654  -1.722            -0.492
+320         -0.635         0.492       -0.131   1.057             2.723
+
+        key  liveness  loudness   mode  speechiness  tempo  time\_signature  \textbackslash{}
+1505  1.276    -0.738     0.396 -1.281       -0.618 -0.294           0.139
+813  -1.487    -0.439    -0.052  0.781        2.728 -0.803          -3.781
+615   0.447    -0.400    -0.879  0.781        2.535  0.191           0.139
+319   0.170    -0.763    -1.461 -1.281       -0.609 -0.840           0.139
+320   0.170    -0.458    -0.176 -1.281       -0.653 -0.074           0.139
+
+      valence
+1505   -0.908
+813    -1.861
+615     0.576
+319     1.825
+320    -0.754
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \subsubsection{\texorpdfstring{\texttt{fit} and \texttt{transform}
+paradigm for
+transformers}{fit and transform paradigm for transformers}}\label{fit-and-transform-paradigm-for-transformers}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{sklearn} uses \texttt{fit} and \texttt{transform} paradigms
+  for feature transformations.
+\item
+  We \texttt{fit} the transformer on the train split and then transform
+  the train split as well as the test split.
+\item
+  We apply the same transformations on the test split.
+\end{itemize}
+
+    \subsubsection{\texorpdfstring{\texttt{sklearn} API summary:
+estimators}{sklearn API summary: estimators}}\label{sklearn-api-summary-estimators}
+
+Suppose \texttt{model} is a classification or regression model.
+
+\begin{verbatim}
+model.fit(X_train, y_train)
+X_train_predictions = model.predict(X_train)
+X_test_predictions = model.predict(X_test)
+\end{verbatim}
+
+    \subsubsection{\texorpdfstring{\texttt{sklearn} API summary:
+transformers}{sklearn API summary: transformers}}\label{sklearn-api-summary-transformers}
+
+Suppose \texttt{transformer} is a transformer used to change the input
+representation, for example, to tackle missing values or to scales
+numeric features.
+
+\begin{verbatim}
+transformer.fit(X_train, [y_train])
+X_train_transformed = transformer.transform(X_train)
+X_test_transformed = transformer.transform(X_test)
+\end{verbatim}
+
+    \begin{itemize}
+\tightlist
+\item
+  You can pass \texttt{y\_train} in \texttt{fit} but it's usually
+  ignored. It allows you to pass it just to be consistent with usual
+  usage of \texttt{sklearn}'s \texttt{fit} method.\\
+\item
+  You can also carry out fitting and transforming in one call using
+  \texttt{fit\_transform}. But be mindful to use it only on the train
+  split and \textbf{not} on the test split.
+\end{itemize}
+
+    \begin{itemize}
+\tightlist
+\item
+  Do you expect \texttt{DummyClassifier} results to change after scaling
+  the data?
+\item
+  Let's check whether scaling makes any difference for \(k\)-NNs.
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{knn\PYZus{}unscaled} \PY{o}{=} \PY{n}{KNeighborsClassifier}\PY{p}{(}\PY{p}{)}
+\PY{n}{knn\PYZus{}unscaled}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Train score: }\PY{l+s+si}{\PYZpc{}0.3f}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{knn\PYZus{}unscaled}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Test score: }\PY{l+s+si}{\PYZpc{}0.3f}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{knn\PYZus{}unscaled}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Train score: 0.726
+Test score: 0.552
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{knn\PYZus{}scaled} \PY{o}{=} \PY{n}{KNeighborsClassifier}\PY{p}{(}\PY{p}{)}
+\PY{n}{knn\PYZus{}scaled}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train\PYZus{}scaled}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Train score: }\PY{l+s+si}{\PYZpc{}0.3f}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{knn\PYZus{}scaled}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{X\PYZus{}train\PYZus{}scaled}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Test score: }\PY{l+s+si}{\PYZpc{}0.3f}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{knn\PYZus{}scaled}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{X\PYZus{}test\PYZus{}scaled}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Train score: 0.798
+Test score: 0.686
+    \end{Verbatim}
+
+    \begin{itemize}
+\tightlist
+\item
+  The scores with scaled data are better compared to the unscaled data
+  in case of \(k\)-NNs.
+\item
+  I am not carrying out cross-validation here for a reason that we'll
+  look into soon.
+\item
+  Note that I am a bit sloppy here and using the test set several times
+  for teaching purposes. But when you build an ML pipeline, please do
+  assessment on the test set only once.
+\end{itemize}
+
+    \subsubsection{Common preprocessing
+techniques}\label{common-preprocessing-techniques}
+
+Some commonly performed feature transformation include:\\
+- Imputation: Tackling missing values - Scaling: Scaling of numeric
+features - One-hot encoding: Tackling categorical variables
+
+We can have one lecture on each of them! In this lesson our goal is to
+getting familiar with them so that we can use them to build ML
+pipelines.
+
+    In the next part of this lecture, we'll build an ML pipeline using
+\href{https://www.kaggle.com/harrywang/housing}{California housing
+prices regression dataset}. In the process, we will talk about different
+feature transformations and how can we apply them so that we do not
+violate the golden rule.
+
+    
+
+    \subsection{\texorpdfstring{Imputation and scaling
+{[}\href{https://youtu.be/G2IXbVzKlt8}{video}{]}}{Imputation and scaling {[}video{]}}}\label{imputation-and-scaling-video}
+
+    \subsubsection{Dataset, splitting, and
+baseline}\label{dataset-splitting-and-baseline}
+
+    We'll be working on
+\href{https://www.kaggle.com/harrywang/housing}{California housing
+prices regression dataset} to demonstrate these feature transformation
+techniques. The task is to predict median house values in Californian
+districts, given a number of features from these districts. If you are
+running the notebook on your own, you'll have to download the data and
+put it in the data directory.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{housing\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../data/housing.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{train\PYZus{}df}\PY{p}{,} \PY{n}{test\PYZus{}df} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}\PY{n}{housing\PYZus{}df}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.1}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{123}\PY{p}{)}
+
+\PY{n}{train\PYZus{}df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+       longitude  latitude  housing\_median\_age  total\_rooms  total\_bedrooms  \textbackslash{}
+6051     -117.75     34.04                22.0       2948.0           636.0
+20113    -119.57     37.94                17.0        346.0           130.0
+14289    -117.13     32.74                46.0       3355.0           768.0
+13665    -117.31     34.02                18.0       1634.0           274.0
+14471    -117.23     32.88                18.0       5566.0          1465.0
+
+       population  households  median\_income  median\_house\_value  \textbackslash{}
+6051       2600.0       602.0         3.1250            113600.0
+20113        51.0        20.0         3.4861            137500.0
+14289      1457.0       708.0         2.6604            170100.0
+13665       899.0       285.0         5.2139            129300.0
+14471      6303.0      1458.0         1.8580            205000.0
+
+      ocean\_proximity
+6051           INLAND
+20113          INLAND
+14289      NEAR OCEAN
+13665          INLAND
+14471      NEAR OCEAN
+\end{Verbatim}
+\end{tcolorbox}
+        
+    Some column values are mean/median but some are not.
+
+    Let's add some new features to the dataset which could help predicting
+the target: \texttt{median\_house\_value}.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{17}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{train\PYZus{}df} \PY{o}{=} \PY{n}{train\PYZus{}df}\PY{o}{.}\PY{n}{assign}\PY{p}{(}
+    \PY{n}{rooms\PYZus{}per\PYZus{}household}\PY{o}{=}\PY{n}{train\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{total\PYZus{}rooms}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{/} \PY{n}{train\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{households}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{p}{)}
+\PY{n}{test\PYZus{}df} \PY{o}{=} \PY{n}{test\PYZus{}df}\PY{o}{.}\PY{n}{assign}\PY{p}{(}
+    \PY{n}{rooms\PYZus{}per\PYZus{}household}\PY{o}{=}\PY{n}{test\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{total\PYZus{}rooms}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{/} \PY{n}{test\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{households}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{p}{)}
+
+\PY{n}{train\PYZus{}df} \PY{o}{=} \PY{n}{train\PYZus{}df}\PY{o}{.}\PY{n}{assign}\PY{p}{(}
+    \PY{n}{bedrooms\PYZus{}per\PYZus{}household}\PY{o}{=}\PY{n}{train\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{total\PYZus{}bedrooms}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{/} \PY{n}{train\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{households}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{p}{)}
+\PY{n}{test\PYZus{}df} \PY{o}{=} \PY{n}{test\PYZus{}df}\PY{o}{.}\PY{n}{assign}\PY{p}{(}
+    \PY{n}{bedrooms\PYZus{}per\PYZus{}household}\PY{o}{=}\PY{n}{test\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{total\PYZus{}bedrooms}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{/} \PY{n}{test\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{households}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{p}{)}
+
+\PY{n}{train\PYZus{}df} \PY{o}{=} \PY{n}{train\PYZus{}df}\PY{o}{.}\PY{n}{assign}\PY{p}{(}
+    \PY{n}{population\PYZus{}per\PYZus{}household}\PY{o}{=}\PY{n}{train\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{population}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{/} \PY{n}{train\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{households}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{p}{)}
+\PY{n}{test\PYZus{}df} \PY{o}{=} \PY{n}{test\PYZus{}df}\PY{o}{.}\PY{n}{assign}\PY{p}{(}
+    \PY{n}{population\PYZus{}per\PYZus{}household}\PY{o}{=}\PY{n}{test\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{population}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{/} \PY{n}{test\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{households}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{18}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{train\PYZus{}df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{18}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+       longitude  latitude  housing\_median\_age  total\_rooms  total\_bedrooms  \textbackslash{}
+6051     -117.75     34.04                22.0       2948.0           636.0
+20113    -119.57     37.94                17.0        346.0           130.0
+14289    -117.13     32.74                46.0       3355.0           768.0
+13665    -117.31     34.02                18.0       1634.0           274.0
+14471    -117.23     32.88                18.0       5566.0          1465.0
+
+       population  households  median\_income  median\_house\_value  \textbackslash{}
+6051       2600.0       602.0         3.1250            113600.0
+20113        51.0        20.0         3.4861            137500.0
+14289      1457.0       708.0         2.6604            170100.0
+13665       899.0       285.0         5.2139            129300.0
+14471      6303.0      1458.0         1.8580            205000.0
+
+      ocean\_proximity  rooms\_per\_household  bedrooms\_per\_household  \textbackslash{}
+6051           INLAND             4.897010                1.056478
+20113          INLAND            17.300000                6.500000
+14289      NEAR OCEAN             4.738701                1.084746
+13665          INLAND             5.733333                0.961404
+14471      NEAR OCEAN             3.817558                1.004801
+
+       population\_per\_household
+6051                   4.318937
+20113                  2.550000
+14289                  2.057910
+13665                  3.154386
+14471                  4.323045
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{19}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{train\PYZus{}df} \PY{o}{=} \PY{n}{train\PYZus{}df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{columns} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{population}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{total\PYZus{}rooms}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{total\PYZus{}bedrooms}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{n}{test\PYZus{}df} \PY{o}{=}  \PY{n}{test\PYZus{}df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{columns} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{population}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{total\PYZus{}rooms}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{total\PYZus{}bedrooms}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsubsection{When is it OK to do things before
+splitting?}\label{when-is-it-ok-to-do-things-before-splitting}
+
+\begin{itemize}
+\item
+  Here it would have been OK to add new features before splitting
+  because we are not using any global information in the data but only
+  looking at one row at a time.
+\item
+  But just to be safe and to avoid accidentally breaking the golden
+  rule, it's better to do it after splitting.
+\item
+  Question: Should we remove \texttt{total\_rooms},
+  \texttt{total\_bedrooms}, and \texttt{population} columns?
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Probably. But I am keeping them in this lecture. You could
+    experiment with removing them and examine whether results change.
+  \end{itemize}
+\end{itemize}
+
+    \subsubsection{EDA}\label{eda}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{20}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{train\PYZus{}df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{20}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+       longitude  latitude  housing\_median\_age  households  median\_income  \textbackslash{}
+6051     -117.75     34.04                22.0       602.0         3.1250
+20113    -119.57     37.94                17.0        20.0         3.4861
+14289    -117.13     32.74                46.0       708.0         2.6604
+13665    -117.31     34.02                18.0       285.0         5.2139
+14471    -117.23     32.88                18.0      1458.0         1.8580
+
+       median\_house\_value ocean\_proximity  rooms\_per\_household  \textbackslash{}
+6051             113600.0          INLAND             4.897010
+20113            137500.0          INLAND            17.300000
+14289            170100.0      NEAR OCEAN             4.738701
+13665            129300.0          INLAND             5.733333
+14471            205000.0      NEAR OCEAN             3.817558
+
+       bedrooms\_per\_household  population\_per\_household
+6051                 1.056478                  4.318937
+20113                6.500000                  2.550000
+14289                1.084746                  2.057910
+13665                0.961404                  3.154386
+14471                1.004801                  4.323045
+\end{Verbatim}
+\end{tcolorbox}
+        
+    The feature scales are quite different.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{21}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{train\PYZus{}df}\PY{o}{.}\PY{n}{info}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+<class 'pandas.core.frame.DataFrame'>
+Index: 18576 entries, 6051 to 19966
+Data columns (total 10 columns):
+ \#   Column                    Non-Null Count  Dtype
+---  ------                    --------------  -----
+ 0   longitude                 18576 non-null  float64
+ 1   latitude                  18576 non-null  float64
+ 2   housing\_median\_age        18576 non-null  float64
+ 3   households                18576 non-null  float64
+ 4   median\_income             18576 non-null  float64
+ 5   median\_house\_value        18576 non-null  float64
+ 6   ocean\_proximity           18576 non-null  object
+ 7   rooms\_per\_household       18576 non-null  float64
+ 8   bedrooms\_per\_household    18391 non-null  float64
+ 9   population\_per\_household  18576 non-null  float64
+dtypes: float64(9), object(1)
+memory usage: 1.6+ MB
+    \end{Verbatim}
+
+    We have one categorical feature and all other features are numeric
+features.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{22}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{train\PYZus{}df}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{22}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+          longitude      latitude  housing\_median\_age    households  \textbackslash{}
+count  18576.000000  18576.000000        18576.000000  18576.000000
+mean    -119.565888     35.627966           28.622255    500.061100
+std        1.999622      2.134658           12.588307    383.044313
+min     -124.350000     32.540000            1.000000      1.000000
+25\%     -121.790000     33.930000           18.000000    280.000000
+50\%     -118.490000     34.250000           29.000000    410.000000
+75\%     -118.010000     37.710000           37.000000    606.000000
+max     -114.310000     41.950000           52.000000   6082.000000
+
+       median\_income  median\_house\_value  rooms\_per\_household  \textbackslash{}
+count   18576.000000        18576.000000         18576.000000
+mean        3.862552       206292.067991             5.426067
+std         1.892491       115083.856175             2.512319
+min         0.499900        14999.000000             0.846154
+25\%         2.560225       119400.000000             4.439360
+50\%         3.527500       179300.000000             5.226415
+75\%         4.736900       263600.000000             6.051620
+max        15.000100       500001.000000           141.909091
+
+       bedrooms\_per\_household  population\_per\_household
+count            18391.000000              18576.000000
+mean                 1.097516                  3.052349
+std                  0.486266                 10.020873
+min                  0.333333                  0.692308
+25\%                  1.005888                  2.430323
+50\%                  1.048860                  2.818868
+75\%                  1.099723                  3.283921
+max                 34.066667               1243.333333
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{itemize}
+\tightlist
+\item
+  Seems like total\_bedrooms column has some missing values.
+\item
+  This must have affected our new feature
+  \texttt{bedrooms\_per\_household} as well.
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{23}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{housing\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{total\PYZus{}bedrooms}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{isnull}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{23}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+207
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{24}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}\PYZsh{} (optional)}
+\PY{n}{train\PYZus{}df}\PY{o}{.}\PY{n}{hist}\PY{p}{(}\PY{n}{bins}\PY{o}{=}\PY{l+m+mi}{50}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{20}\PY{p}{,} \PY{l+m+mi}{15}\PY{p}{)}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_61_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{25}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}\PYZsh{} (optional)}
+\PY{n}{train\PYZus{}df}\PY{o}{.}\PY{n}{plot}\PY{p}{(}
+    \PY{n}{kind}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{scatter}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+    \PY{n}{x}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{longitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+    \PY{n}{y}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{latitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+    \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.4}\PY{p}{,}
+    \PY{n}{s}\PY{o}{=}\PY{n}{train\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{population\PYZus{}per\PYZus{}household}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,}
+    \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{7}\PY{p}{)}\PY{p}{,}
+    \PY{n}{c}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median\PYZus{}house\PYZus{}value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+    \PY{n}{cmap}\PY{o}{=}\PY{n}{plt}\PY{o}{.}\PY{n}{get\PYZus{}cmap}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{jet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{,}
+    \PY{n}{colorbar}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,}
+    \PY{n}{sharex}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,}
+\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_62_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsubsection{What all transformations we need to apply on the
+dataset?}\label{what-all-transformations-we-need-to-apply-on-the-dataset}
+
+Here is what we see from the EDA.
+
+\begin{itemize}
+\tightlist
+\item
+  Some missing values in \texttt{total\_bedrooms} column
+\item
+  Scales are quite different across columns.
+\item
+  Categorical variable \texttt{ocean\_proximity}
+\end{itemize}
+
+Read about
+\href{https://scikit-learn.org/stable/modules/preprocessing.html}{preprocessing
+techniques implemented in \texttt{scikit-learn}}.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{26}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} We are droping the categorical variable ocean\PYZus{}proximity for now. We\PYZsq{}ll come back to it in a bit.}
+\PY{n}{X\PYZus{}train} \PY{o}{=} \PY{n}{train\PYZus{}df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median\PYZus{}house\PYZus{}value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ocean\PYZus{}proximity}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+\PY{n}{y\PYZus{}train} \PY{o}{=} \PY{n}{train\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median\PYZus{}house\PYZus{}value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+
+\PY{n}{X\PYZus{}test} \PY{o}{=} \PY{n}{test\PYZus{}df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median\PYZus{}house\PYZus{}value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ocean\PYZus{}proximity}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+\PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{test\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median\PYZus{}house\PYZus{}value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsubsection{\texorpdfstring{Let's first run our baseline model
+\texttt{DummyRegressor}}{Let's first run our baseline model DummyRegressor}}\label{lets-first-run-our-baseline-model-dummyregressor}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{27}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{results\PYZus{}dict} \PY{o}{=} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}  \PY{c+c1}{\PYZsh{} dictionary to store our results for different models}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{31}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{mean\PYZus{}std\PYZus{}cross\PYZus{}val\PYZus{}scores}\PY{p}{(}\PY{n}{model}\PY{p}{,} \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{o}{*}\PY{o}{*}\PY{n}{kwargs}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    Returns mean and std of cross validation}
+
+\PY{l+s+sd}{    Parameters}
+\PY{l+s+sd}{    \PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}}
+\PY{l+s+sd}{    model :}
+\PY{l+s+sd}{        scikit\PYZhy{}learn model}
+\PY{l+s+sd}{    X\PYZus{}train : numpy array or pandas DataFrame}
+\PY{l+s+sd}{        X in the training data}
+\PY{l+s+sd}{    y\PYZus{}train :}
+\PY{l+s+sd}{        y in the training data}
+
+\PY{l+s+sd}{    Returns}
+\PY{l+s+sd}{    \PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}}
+\PY{l+s+sd}{        pandas Series with mean scores from cross\PYZus{}validation}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+
+    \PY{n}{scores} \PY{o}{=} \PY{n}{cross\PYZus{}validate}\PY{p}{(}\PY{n}{model}\PY{p}{,} \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{o}{*}\PY{o}{*}\PY{n}{kwargs}\PY{p}{)}
+
+    \PY{n}{mean\PYZus{}scores} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{scores}\PY{p}{)}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{p}{)}
+    \PY{n}{std\PYZus{}scores} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{scores}\PY{p}{)}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{p}{)}
+    \PY{n}{out\PYZus{}col} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{mean\PYZus{}scores}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+        \PY{n}{out\PYZus{}col}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZpc{}0.3f (+/\PYZhy{} \PYZpc{}0.3f)}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{mean\PYZus{}scores}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,} \PY{n}{std\PYZus{}scores}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+
+    \PY{k}{return} \PY{n}{pd}\PY{o}{.}\PY{n}{Series}\PY{p}{(}\PY{n}{data}\PY{o}{=}\PY{n}{out\PYZus{}col}\PY{p}{,} \PY{n}{index}\PY{o}{=}\PY{n}{mean\PYZus{}scores}\PY{o}{.}\PY{n}{index}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{32}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{dummy} \PY{o}{=} \PY{n}{DummyRegressor}\PY{p}{(}\PY{n}{strategy}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{results\PYZus{}dict}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{dummy}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{mean\PYZus{}std\PYZus{}cross\PYZus{}val\PYZus{}scores}\PY{p}{(}
+    \PY{n}{dummy}\PY{p}{,} \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{return\PYZus{}train\PYZus{}score}\PY{o}{=}\PY{k+kc}{True}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{34}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{results\PYZus{}dict}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{34}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+                          dummy
+fit\_time      0.002 (+/- 0.001)
+score\_time    0.001 (+/- 0.000)
+test\_score   -0.055 (+/- 0.012)
+train\_score  -0.055 (+/- 0.001)
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \subsubsection{Imputation}\label{imputation}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{35}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X\PYZus{}train}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{35}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+       longitude  latitude  housing\_median\_age  households  median\_income  \textbackslash{}
+6051     -117.75     34.04                22.0       602.0         3.1250
+20113    -119.57     37.94                17.0        20.0         3.4861
+14289    -117.13     32.74                46.0       708.0         2.6604
+13665    -117.31     34.02                18.0       285.0         5.2139
+14471    -117.23     32.88                18.0      1458.0         1.8580
+{\ldots}          {\ldots}       {\ldots}                 {\ldots}         {\ldots}            {\ldots}
+7763     -118.10     33.91                36.0       130.0         3.6389
+15377    -117.24     33.37                14.0       779.0         4.5391
+17730    -121.76     37.33                 5.0       697.0         5.6306
+15725    -122.44     37.78                44.0       326.0         3.8750
+19966    -119.08     36.21                20.0       348.0         2.5156
+
+       rooms\_per\_household  bedrooms\_per\_household  population\_per\_household
+6051              4.897010                1.056478                  4.318937
+20113            17.300000                6.500000                  2.550000
+14289             4.738701                1.084746                  2.057910
+13665             5.733333                0.961404                  3.154386
+14471             3.817558                1.004801                  4.323045
+{\ldots}                    {\ldots}                     {\ldots}                       {\ldots}
+7763              5.584615                     NaN                  3.769231
+15377             6.016688                1.017972                  3.127086
+17730             5.958393                1.031564                  3.493544
+15725             4.739264                1.024540                  1.720859
+19966             5.491379                1.117816                  3.566092
+
+[18576 rows x 8 columns]
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{63}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{knn} \PY{o}{=} \PY{n}{KNeighborsRegressor}\PY{p}{(}\PY{p}{)}
+\PY{n}{knn}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}, frame=single, framerule=2mm, rulecolor=\color{outerrorbackground}]
+\textcolor{ansi-red}{---------------------------------------------------------------------------}
+\textcolor{ansi-red}{ValueError}                                Traceback (most recent call last)
+\textcolor{ansi-green}{/var/folders/j6/dt88trtd17lf726d55bq16c40000gr/T/ipykernel\_64013/2157252593.py} in \textcolor{ansi-cyan}{?}\textcolor{ansi-blue}{()}
+\textcolor{ansi-green-intense}{\textbf{      1}} knn \textcolor{ansi-blue}{=} KNeighborsRegressor\textcolor{ansi-blue}{(}\textcolor{ansi-blue}{)}
+\textcolor{ansi-green}{----> 2}\textcolor{ansi-red}{ }knn\textcolor{ansi-blue}{.}fit\textcolor{ansi-blue}{(}X\_train\textcolor{ansi-blue}{,} y\_train\textcolor{ansi-blue}{)}
+
+\textcolor{ansi-green}{\textasciitilde{}/miniconda3/envs/cpsc330/lib/python3.10/site-packages/sklearn/base.py} in \textcolor{ansi-cyan}{?}\textcolor{ansi-blue}{(estimator, *args, **kwargs)}
+\textcolor{ansi-green-intense}{\textbf{   1347}}                 skip\_parameter\_validation=(
+\textcolor{ansi-green-intense}{\textbf{   1348}}                     prefer\_skip\_nested\_validation \textcolor{ansi-green}{or} global\_skip\_validation
+\textcolor{ansi-green-intense}{\textbf{   1349}}                 )
+\textcolor{ansi-green-intense}{\textbf{   1350}}             ):
+\textcolor{ansi-green}{-> 1351}\textcolor{ansi-red}{                 }\textcolor{ansi-green}{return} fit\_method\textcolor{ansi-blue}{(}estimator\textcolor{ansi-blue}{,} \textcolor{ansi-blue}{*}args\textcolor{ansi-blue}{,} \textcolor{ansi-blue}{**}kwargs\textcolor{ansi-blue}{)}
+
+\textcolor{ansi-green}{\textasciitilde{}/miniconda3/envs/cpsc330/lib/python3.10/site-packages/sklearn/neighbors/\_regression.py} in \textcolor{ansi-cyan}{?}\textcolor{ansi-blue}{(self, X, y)}
+\textcolor{ansi-green-intense}{\textbf{    219}}         \textcolor{ansi-blue}{-}\textcolor{ansi-blue}{-}\textcolor{ansi-blue}{-}\textcolor{ansi-blue}{-}\textcolor{ansi-blue}{-}\textcolor{ansi-blue}{-}\textcolor{ansi-blue}{-}
+\textcolor{ansi-green-intense}{\textbf{    220}}         self \textcolor{ansi-blue}{:} KNeighborsRegressor
+\textcolor{ansi-green-intense}{\textbf{    221}}             The fitted k\textcolor{ansi-blue}{-}nearest neighbors regressor\textcolor{ansi-blue}{.}
+\textcolor{ansi-green-intense}{\textbf{    222}}         """
+\textcolor{ansi-green}{--> 223}\textcolor{ansi-red}{         }\textcolor{ansi-green}{return} self\textcolor{ansi-blue}{.}\_fit\textcolor{ansi-blue}{(}X\textcolor{ansi-blue}{,} y\textcolor{ansi-blue}{)}
+
+\textcolor{ansi-green}{\textasciitilde{}/miniconda3/envs/cpsc330/lib/python3.10/site-packages/sklearn/neighbors/\_base.py} in \textcolor{ansi-cyan}{?}\textcolor{ansi-blue}{(self, X, y)}
+\textcolor{ansi-green-intense}{\textbf{    473}}     \textcolor{ansi-green}{def} \_fit\textcolor{ansi-blue}{(}self\textcolor{ansi-blue}{,} X\textcolor{ansi-blue}{,} y\textcolor{ansi-blue}{=}\textcolor{ansi-green}{None}\textcolor{ansi-blue}{)}\textcolor{ansi-blue}{:}
+\textcolor{ansi-green-intense}{\textbf{    474}}         \textcolor{ansi-green}{if} self\textcolor{ansi-blue}{.}\_get\_tags\textcolor{ansi-blue}{(}\textcolor{ansi-blue}{)}\textcolor{ansi-blue}{[}\textcolor{ansi-blue}{"requires\_y"}\textcolor{ansi-blue}{]}\textcolor{ansi-blue}{:}
+\textcolor{ansi-green-intense}{\textbf{    475}}             \textcolor{ansi-green}{if} \textcolor{ansi-green}{not} isinstance\textcolor{ansi-blue}{(}X\textcolor{ansi-blue}{,} \textcolor{ansi-blue}{(}KDTree\textcolor{ansi-blue}{,} BallTree\textcolor{ansi-blue}{,} NeighborsBase\textcolor{ansi-blue}{)}\textcolor{ansi-blue}{)}\textcolor{ansi-blue}{:}
+\textcolor{ansi-green}{--> 476}\textcolor{ansi-red}{                 X, y = self.\_validate\_data(
+}\textcolor{ansi-green-intense}{\textbf{    477}}                     X\textcolor{ansi-blue}{,} y\textcolor{ansi-blue}{,} accept\_sparse\textcolor{ansi-blue}{=}\textcolor{ansi-blue}{"csr"}\textcolor{ansi-blue}{,} multi\_output\textcolor{ansi-blue}{=}\textcolor{ansi-green}{True}\textcolor{ansi-blue}{,} order\textcolor{ansi-blue}{=}\textcolor{ansi-blue}{"C"}
+\textcolor{ansi-green-intense}{\textbf{    478}}                 )
+\textcolor{ansi-green-intense}{\textbf{    479}} 
+
+\textcolor{ansi-green}{\textasciitilde{}/miniconda3/envs/cpsc330/lib/python3.10/site-packages/sklearn/base.py} in \textcolor{ansi-cyan}{?}\textcolor{ansi-blue}{(self, X, y, reset, validate\_separately, cast\_to\_ndarray, **check\_params)}
+\textcolor{ansi-green-intense}{\textbf{    646}}                 \textcolor{ansi-green}{if} \textcolor{ansi-blue}{"estimator"} \textcolor{ansi-green}{not} \textcolor{ansi-green}{in} check\_y\_params\textcolor{ansi-blue}{:}
+\textcolor{ansi-green-intense}{\textbf{    647}}                     check\_y\_params \textcolor{ansi-blue}{=} \textcolor{ansi-blue}{\{}\textcolor{ansi-blue}{**}default\_check\_params\textcolor{ansi-blue}{,} \textcolor{ansi-blue}{**}check\_y\_params\textcolor{ansi-blue}{\}}
+\textcolor{ansi-green-intense}{\textbf{    648}}                 y \textcolor{ansi-blue}{=} check\_array\textcolor{ansi-blue}{(}y\textcolor{ansi-blue}{,} input\_name\textcolor{ansi-blue}{=}\textcolor{ansi-blue}{"y"}\textcolor{ansi-blue}{,} \textcolor{ansi-blue}{**}check\_y\_params\textcolor{ansi-blue}{)}
+\textcolor{ansi-green-intense}{\textbf{    649}}             \textcolor{ansi-green}{else}\textcolor{ansi-blue}{:}
+\textcolor{ansi-green}{--> 650}\textcolor{ansi-red}{                 }X\textcolor{ansi-blue}{,} y \textcolor{ansi-blue}{=} check\_X\_y\textcolor{ansi-blue}{(}X\textcolor{ansi-blue}{,} y\textcolor{ansi-blue}{,} \textcolor{ansi-blue}{**}check\_params\textcolor{ansi-blue}{)}
+\textcolor{ansi-green-intense}{\textbf{    651}}             out \textcolor{ansi-blue}{=} X\textcolor{ansi-blue}{,} y
+\textcolor{ansi-green-intense}{\textbf{    652}} 
+\textcolor{ansi-green-intense}{\textbf{    653}}         \textcolor{ansi-green}{if} \textcolor{ansi-green}{not} no\_val\_X \textcolor{ansi-green}{and} check\_params\textcolor{ansi-blue}{.}get\textcolor{ansi-blue}{(}\textcolor{ansi-blue}{"ensure\_2d"}\textcolor{ansi-blue}{,} \textcolor{ansi-green}{True}\textcolor{ansi-blue}{)}\textcolor{ansi-blue}{:}
+
+\textcolor{ansi-green}{\textasciitilde{}/miniconda3/envs/cpsc330/lib/python3.10/site-packages/sklearn/utils/validation.py} in \textcolor{ansi-cyan}{?}\textcolor{ansi-blue}{(X, y, accept\_sparse, accept\_large\_sparse, dtype, order, copy, force\_all\_finite, ensure\_2d, allow\_nd, multi\_output, ensure\_min\_samples, ensure\_min\_features, y\_numeric, estimator)}
+\textcolor{ansi-green-intense}{\textbf{   1188}}         raise ValueError(
+\textcolor{ansi-green-intense}{\textbf{   1189}}             \textcolor{ansi-blue}{f"\{estimator\_name\} requires y to be passed, but the target y is None"}
+\textcolor{ansi-green-intense}{\textbf{   1190}}         )
+\textcolor{ansi-green-intense}{\textbf{   1191}} 
+\textcolor{ansi-green}{-> 1192}\textcolor{ansi-red}{     X = check\_array(
+}\textcolor{ansi-green-intense}{\textbf{   1193}}         X\textcolor{ansi-blue}{,}
+\textcolor{ansi-green-intense}{\textbf{   1194}}         accept\_sparse\textcolor{ansi-blue}{=}accept\_sparse\textcolor{ansi-blue}{,}
+\textcolor{ansi-green-intense}{\textbf{   1195}}         accept\_large\_sparse\textcolor{ansi-blue}{=}accept\_large\_sparse\textcolor{ansi-blue}{,}
+
+\textcolor{ansi-green}{\textasciitilde{}/miniconda3/envs/cpsc330/lib/python3.10/site-packages/sklearn/utils/validation.py} in \textcolor{ansi-cyan}{?}\textcolor{ansi-blue}{(array, accept\_sparse, accept\_large\_sparse, dtype, order, copy, force\_all\_finite, ensure\_2d, allow\_nd, ensure\_min\_samples, ensure\_min\_features, estimator, input\_name)}
+\textcolor{ansi-green-intense}{\textbf{    948}}                         )
+\textcolor{ansi-green-intense}{\textbf{    949}}                     array \textcolor{ansi-blue}{=} xp\textcolor{ansi-blue}{.}astype\textcolor{ansi-blue}{(}array\textcolor{ansi-blue}{,} dtype\textcolor{ansi-blue}{,} copy\textcolor{ansi-blue}{=}\textcolor{ansi-green}{False}\textcolor{ansi-blue}{)}
+\textcolor{ansi-green-intense}{\textbf{    950}}                 \textcolor{ansi-green}{else}\textcolor{ansi-blue}{:}
+\textcolor{ansi-green-intense}{\textbf{    951}}                     array \textcolor{ansi-blue}{=} \_asarray\_with\_order\textcolor{ansi-blue}{(}array\textcolor{ansi-blue}{,} order\textcolor{ansi-blue}{=}order\textcolor{ansi-blue}{,} dtype\textcolor{ansi-blue}{=}dtype\textcolor{ansi-blue}{,} xp\textcolor{ansi-blue}{=}xp\textcolor{ansi-blue}{)}
+\textcolor{ansi-green}{--> 952}\textcolor{ansi-red}{             }\textcolor{ansi-green}{except} ComplexWarning \textcolor{ansi-green}{as} complex\_warning\textcolor{ansi-blue}{:}
+\textcolor{ansi-green-intense}{\textbf{    953}}                 raise ValueError(
+\textcolor{ansi-green-intense}{\textbf{    954}}                     \textcolor{ansi-blue}{"Complex data not supported\textbackslash{}n\{\}\textbackslash{}n"}\textcolor{ansi-blue}{.}format\textcolor{ansi-blue}{(}array\textcolor{ansi-blue}{)}
+\textcolor{ansi-green-intense}{\textbf{    955}}                 ) from complex\_warning
+
+\textcolor{ansi-green}{\textasciitilde{}/miniconda3/envs/cpsc330/lib/python3.10/site-packages/sklearn/utils/\_array\_api.py} in \textcolor{ansi-cyan}{?}\textcolor{ansi-blue}{(array, dtype, order, copy, xp)}
+\textcolor{ansi-green-intense}{\textbf{    517}}         \textcolor{ansi-red}{\# Use NumPy API to support order}
+\textcolor{ansi-green-intense}{\textbf{    518}}         \textcolor{ansi-green}{if} copy \textcolor{ansi-green}{is} \textcolor{ansi-green}{True}\textcolor{ansi-blue}{:}
+\textcolor{ansi-green-intense}{\textbf{    519}}             array \textcolor{ansi-blue}{=} numpy\textcolor{ansi-blue}{.}array\textcolor{ansi-blue}{(}array\textcolor{ansi-blue}{,} order\textcolor{ansi-blue}{=}order\textcolor{ansi-blue}{,} dtype\textcolor{ansi-blue}{=}dtype\textcolor{ansi-blue}{)}
+\textcolor{ansi-green-intense}{\textbf{    520}}         \textcolor{ansi-green}{else}\textcolor{ansi-blue}{:}
+\textcolor{ansi-green}{--> 521}\textcolor{ansi-red}{             }array \textcolor{ansi-blue}{=} numpy\textcolor{ansi-blue}{.}asarray\textcolor{ansi-blue}{(}array\textcolor{ansi-blue}{,} order\textcolor{ansi-blue}{=}order\textcolor{ansi-blue}{,} dtype\textcolor{ansi-blue}{=}dtype\textcolor{ansi-blue}{)}
+\textcolor{ansi-green-intense}{\textbf{    522}} 
+\textcolor{ansi-green-intense}{\textbf{    523}}         \textcolor{ansi-red}{\# At this point array is a NumPy ndarray. We convert it to an array}
+\textcolor{ansi-green-intense}{\textbf{    524}}         \textcolor{ansi-red}{\# container that is consistent with the input's namespace.}
+
+\textcolor{ansi-green}{\textasciitilde{}/miniconda3/envs/cpsc330/lib/python3.10/site-packages/pandas/core/generic.py} in \textcolor{ansi-cyan}{?}\textcolor{ansi-blue}{(self, dtype)}
+\textcolor{ansi-green-intense}{\textbf{   2148}}     \textcolor{ansi-green}{def} \_\_array\_\_\textcolor{ansi-blue}{(}self\textcolor{ansi-blue}{,} dtype\textcolor{ansi-blue}{:} npt\textcolor{ansi-blue}{.}DTypeLike \textcolor{ansi-blue}{|} \textcolor{ansi-green}{None} \textcolor{ansi-blue}{=} \textcolor{ansi-green}{None}\textcolor{ansi-blue}{)} \textcolor{ansi-blue}{->} np\textcolor{ansi-blue}{.}ndarray\textcolor{ansi-blue}{:}
+\textcolor{ansi-green-intense}{\textbf{   2149}}         values \textcolor{ansi-blue}{=} self\textcolor{ansi-blue}{.}\_values
+\textcolor{ansi-green}{-> 2150}\textcolor{ansi-red}{         }arr \textcolor{ansi-blue}{=} np\textcolor{ansi-blue}{.}asarray\textcolor{ansi-blue}{(}values\textcolor{ansi-blue}{,} dtype\textcolor{ansi-blue}{=}dtype\textcolor{ansi-blue}{)}
+\textcolor{ansi-green-intense}{\textbf{   2151}}         if (
+\textcolor{ansi-green-intense}{\textbf{   2152}}             astype\_is\_view\textcolor{ansi-blue}{(}values\textcolor{ansi-blue}{.}dtype\textcolor{ansi-blue}{,} arr\textcolor{ansi-blue}{.}dtype\textcolor{ansi-blue}{)}
+\textcolor{ansi-green-intense}{\textbf{   2153}}             \textcolor{ansi-green}{and} using\_copy\_on\_write\textcolor{ansi-blue}{(}\textcolor{ansi-blue}{)}
+
+\textcolor{ansi-red}{ValueError}: could not convert string to float: 'INLAND'
+    \end{Verbatim}
+
+    \subsubsection{What's the problem?}\label{whats-the-problem}
+
+\begin{verbatim}
+ValueError: Input contains NaN, infinity or a value too large for dtype('float64').
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  The classifier is not able to deal with missing values (NaNs).
+\item
+  What are possible ways to deal with the problem?
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Delete the rows?
+  \item
+    Replace them with some reasonable values?
+  \end{itemize}
+\end{itemize}
+
+    \begin{itemize}
+\tightlist
+\item
+  \texttt{SimpleImputer} is a transformer in \texttt{sklearn} to deal
+  with this problem. For example,
+
+  \begin{itemize}
+  \tightlist
+  \item
+    You can impute missing values in categorical columns with the most
+    frequent value.
+  \item
+    You can impute the missing values in numeric columns with the mean
+    or median of the column.
+  \end{itemize}
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{37}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X\PYZus{}train}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{bedrooms\PYZus{}per\PYZus{}household}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{37}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+       longitude  latitude  housing\_median\_age  households  median\_income  \textbackslash{}
+20248    -119.23     34.25                28.0         9.0         8.0000
+12649    -121.47     38.51                52.0         9.0         3.6250
+3125     -117.76     35.22                 4.0         6.0         1.6250
+12138    -117.22     33.87                16.0        14.0         2.6250
+8219     -118.21     33.79                33.0        36.0         4.5938
+{\ldots}          {\ldots}       {\ldots}                 {\ldots}         {\ldots}            {\ldots}
+4591     -118.28     34.06                42.0      1179.0         1.2254
+19485    -120.98     37.66                10.0       255.0         0.9336
+6962     -118.05     33.99                38.0       357.0         3.7328
+14970    -117.01     32.74                31.0       677.0         2.6973
+7763     -118.10     33.91                36.0       130.0         3.6389
+
+       rooms\_per\_household  bedrooms\_per\_household  population\_per\_household
+20248             2.888889                0.333333                  3.222222
+12649             2.222222                0.444444                  8.222222
+3125              3.000000                0.500000                  1.333333
+12138             4.000000                0.500000                  2.785714
+8219              0.888889                0.500000                  2.666667
+{\ldots}                    {\ldots}                     {\ldots}                       {\ldots}
+4591              2.096692                     NaN                  3.218830
+19485             3.662745                     NaN                  1.572549
+6962              4.535014                     NaN                  2.481793
+14970             5.129985                     NaN                  3.098966
+7763              5.584615                     NaN                  3.769231
+
+[18576 rows x 8 columns]
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{38}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X\PYZus{}train}\PY{o}{.}\PY{n}{shape}
+\PY{n}{X\PYZus{}test}\PY{o}{.}\PY{n}{shape}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{38}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+(2064, 8)
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{39}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{imputer} \PY{o}{=} \PY{n}{SimpleImputer}\PY{p}{(}\PY{n}{strategy}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{imputer}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{)}
+\PY{n}{X\PYZus{}train\PYZus{}imp} \PY{o}{=} \PY{n}{imputer}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{)}
+\PY{n}{X\PYZus{}test\PYZus{}imp} \PY{o}{=} \PY{n}{imputer}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{itemize}
+\tightlist
+\item
+  Let's check whether the NaN values have been replaced or not
+\item
+  Note that \texttt{imputer.transform} returns an \texttt{numpy} array
+  and not a dataframe
+\end{itemize}
+
+    \subsubsection{Scaling}\label{scaling}
+
+    \begin{itemize}
+\tightlist
+\item
+  This problem affects a large number of ML methods.
+\item
+  A number of approaches to this problem. We are going to look into two
+  most popular ones.
+\end{itemize}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.1500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.3833}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2667}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Approach
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+What it does
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+How to update \(X\) (but see below!)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+sklearn implementation
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+standardization & sets sample mean to \(0\), s.d. to \(1\) &
+\texttt{X\ -=\ np.mean(X,axis=0)}\texttt{X\ /=\ \ np.std(X,axis=0)} &
+\href{https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html\#sklearn.preprocessing.StandardScaler}{\texttt{StandardScaler()}} \\
+\end{longtable}
+
+    There are all sorts of articles on this; see,
+e.g.~\href{http://www.dataminingblog.com/standardization-vs-normalization/}{here}
+and
+\href{https://medium.com/@rrfd/standardize-or-normalize-examples-in-python-e3f174b65dfc}{here}.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{40}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} [source](https://amueller.github.io/COMS4995\PYZhy{}s19/slides/aml\PYZhy{}05\PYZhy{}preprocessing/\PYZsh{}8)}
+\PY{n}{mglearn\PYZus{}utils}\PY{o}{.}\PY{n}{plot\PYZus{}scaling}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_82_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{41}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{preprocessing} \PY{k+kn}{import} \PY{n}{MinMaxScaler}\PY{p}{,} \PY{n}{StandardScaler}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{42}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{scaler} \PY{o}{=} \PY{n}{StandardScaler}\PY{p}{(}\PY{p}{)}
+\PY{n}{X\PYZus{}train\PYZus{}scaled} \PY{o}{=} \PY{n}{scaler}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{X\PYZus{}train\PYZus{}imp}\PY{p}{)}
+\PY{n}{X\PYZus{}test\PYZus{}scaled} \PY{o}{=} \PY{n}{scaler}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{n}{X\PYZus{}test\PYZus{}imp}\PY{p}{)}
+\PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{X\PYZus{}train\PYZus{}scaled}\PY{p}{,} \PY{n}{columns}\PY{o}{=}\PY{n}{X\PYZus{}train}\PY{o}{.}\PY{n}{columns}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{42}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+       longitude  latitude  housing\_median\_age  households  median\_income  \textbackslash{}
+0       0.908140 -0.743917           -0.526078    0.266135      -0.389736
+1      -0.002057  1.083123           -0.923283   -1.253312      -0.198924
+2       1.218207 -1.352930            1.380504    0.542873      -0.635239
+3       1.128188 -0.753286           -0.843842   -0.561467       0.714077
+4       1.168196 -1.287344           -0.843842    2.500924      -1.059242
+{\ldots}          {\ldots}       {\ldots}                 {\ldots}         {\ldots}            {\ldots}
+18571   0.733102 -0.804818            0.586095   -0.966131      -0.118182
+18572   1.163195 -1.057793           -1.161606    0.728235       0.357500
+18573  -1.097293  0.797355           -1.876574    0.514155       0.934269
+18574  -1.437367  1.008167            1.221622   -0.454427       0.006578
+18575   0.242996  0.272667           -0.684960   -0.396991      -0.711754
+
+       rooms\_per\_household  bedrooms\_per\_household  population\_per\_household
+0                -0.210591               -0.083813                  0.126398
+1                 4.726412               11.166631                 -0.050132
+2                -0.273606               -0.025391                 -0.099240
+3                 0.122307               -0.280310                  0.010183
+4                -0.640266               -0.190617                  0.126808
+{\ldots}                    {\ldots}                     {\ldots}                       {\ldots}
+18571             0.063110               -0.099558                  0.071541
+18572             0.235096               -0.163397                  0.007458
+18573             0.211892               -0.135305                  0.044029
+18574            -0.273382               -0.149822                 -0.132875
+18575             0.025998                0.042957                  0.051269
+
+[18576 rows x 8 columns]
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{43}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{knn} \PY{o}{=} \PY{n}{KNeighborsRegressor}\PY{p}{(}\PY{p}{)}
+\PY{n}{knn}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train\PYZus{}scaled}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+\PY{n}{knn}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{X\PYZus{}train\PYZus{}scaled}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{43}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+0.7978563117812038
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{itemize}
+\tightlist
+\item
+  Big difference in the KNN training performance after scaling the data.
+\item
+  But we saw last week that training score doesn't tell us much. We
+  should look at the cross-validation score.
+\end{itemize}
+
+    
+
+    \subsection{❓❓ Questions for you}\label{questions-for-you}
+
+    \subsubsection{(iClicker) Exercise 5.2}\label{iclicker-exercise-5.2}
+
+\textbf{iClicker cloud join link: https://join.iclicker.com/WMSX}
+
+\textbf{Select all of the following statements which are TRUE.}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \texttt{StandardScaler} ensures a fixed range (i.e., minimum and
+  maximum values) for the features.
+\item
+  \texttt{StandardScaler} calculates mean and standard deviation for
+  each feature separately.
+\item
+  In general, it's a good idea to apply scaling on numeric features
+  before training \(k\)-NN or SVM RBF models.
+\item
+  The transformed feature values might be hard to interpret for humans.
+\item
+  After applying \texttt{SimpleImputer} The transformed data has a
+  different shape than the original data.
+\end{enumerate}
+
+    
+
+    
+
+    \subsection{Break (5 min)}\label{break-5-min}
+
+\includegraphics{/Users/charleenchu/Desktop/school/cpsc330-2023W2/lectures/img/eva-coffee.png}
+
+    
+
+    \subsection{Feature transformations and the golden
+rule}\label{feature-transformations-and-the-golden-rule}
+
+    \subsubsection{How to carry out
+cross-validation?}\label{how-to-carry-out-cross-validation}
+
+\begin{itemize}
+\tightlist
+\item
+  Last week we saw that cross validation is a better way to get a
+  realistic assessment of the model.
+\item
+  Let's try cross-validation with transformed data.
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{44}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{knn} \PY{o}{=} \PY{n}{KNeighborsRegressor}\PY{p}{(}\PY{p}{)}
+
+\PY{n}{scaler} \PY{o}{=} \PY{n}{StandardScaler}\PY{p}{(}\PY{p}{)}
+\PY{n}{scaler}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train\PYZus{}imp}\PY{p}{)}
+\PY{n}{X\PYZus{}train\PYZus{}scaled} \PY{o}{=} \PY{n}{scaler}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{n}{X\PYZus{}train\PYZus{}imp}\PY{p}{)}
+\PY{n}{X\PYZus{}test\PYZus{}scaled} \PY{o}{=} \PY{n}{scaler}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{n}{X\PYZus{}test\PYZus{}imp}\PY{p}{)}
+\PY{n}{scores} \PY{o}{=} \PY{n}{cross\PYZus{}validate}\PY{p}{(}\PY{n}{knn}\PY{p}{,} \PY{n}{X\PYZus{}train\PYZus{}scaled}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{return\PYZus{}train\PYZus{}score}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{scores}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{44}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   fit\_time  score\_time  test\_score  train\_score
+0  0.009052    0.086537    0.696373     0.794236
+1  0.003415    0.066976    0.684447     0.791467
+2  0.003351    0.072485    0.695532     0.789436
+3  0.003294    0.073483    0.679478     0.793243
+4  0.003234    0.045086    0.680657     0.794820
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{itemize}
+\tightlist
+\item
+  Do you see any problem here?
+\item
+  Are we applying \texttt{fit\_transform} on train portion and
+  \texttt{transform} on validation portion in each fold?
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Here you might be allowing information from the validation set to
+    \textbf{leak} into the training step.
+  \end{itemize}
+\end{itemize}
+
+    \begin{itemize}
+\tightlist
+\item
+  You need to apply the \textbf{SAME} preprocessing steps to
+  train/validation.
+\item
+  With many different transformations and cross validation the code gets
+  unwieldy very quickly.
+\item
+  Likely to make mistakes and ``leak'' information.
+\end{itemize}
+
+    \begin{itemize}
+\tightlist
+\item
+  In these examples our test accuracies look fine, but our methodology
+  is flawed.
+\item
+  Implications can be significant in practice!
+\end{itemize}
+
+    \subsubsection{Pipelines}\label{pipelines}
+
+Can we do this in a more elegant and organized way?
+
+\begin{itemize}
+\tightlist
+\item
+  YES!! Using
+  \href{https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html}{\texttt{scikit-learn\ Pipeline}}.
+\item
+  \href{https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html}{\texttt{scikit-learn\ Pipeline}}
+  allows you to define a ``pipeline'' of transformers with a final
+  estimator.
+\end{itemize}
+
+    Let's combine the preprocessing and model with pipeline
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{45}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{} Simple example of a pipeline}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{pipeline} \PY{k+kn}{import} \PY{n}{Pipeline}
+
+\PY{n}{pipe} \PY{o}{=} \PY{n}{Pipeline}\PY{p}{(}
+    \PY{n}{steps}\PY{o}{=}\PY{p}{[}
+        \PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{imputer}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{SimpleImputer}\PY{p}{(}\PY{n}{strategy}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{)}\PY{p}{,}
+        \PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{scaler}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{StandardScaler}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{,}
+        \PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{regressor}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{KNeighborsRegressor}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{,}
+    \PY{p}{]}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{itemize}
+\tightlist
+\item
+  Syntax: pass in a list of steps.
+\item
+  The last step should be a \textbf{model/classifier/regressor}.
+\item
+  All the earlier steps should be \textbf{transformers}.
+\end{itemize}
+
+    \subsubsection{\texorpdfstring{Alternative and more compact syntax:
+\texttt{make\_pipeline}}{Alternative and more compact syntax: make\_pipeline}}\label{alternative-and-more-compact-syntax-make_pipeline}
+
+    \begin{itemize}
+\tightlist
+\item
+  Shorthand for \texttt{Pipeline} constructor
+\item
+  Does not permit naming steps
+\item
+  Instead the names of steps are set to lowercase of their types
+  automatically; \texttt{StandardScaler()} would be named as
+  \texttt{standardscaler}
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{46}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{pipeline} \PY{k+kn}{import} \PY{n}{make\PYZus{}pipeline}
+
+\PY{n}{pipe} \PY{o}{=} \PY{n}{make\PYZus{}pipeline}\PY{p}{(}
+    \PY{n}{SimpleImputer}\PY{p}{(}\PY{n}{strategy}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{,} \PY{n}{StandardScaler}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n}{KNeighborsRegressor}\PY{p}{(}\PY{p}{)}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{47}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{pipe}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{itemize}
+\tightlist
+\item
+  Note that we are passing \texttt{X\_train} and \textbf{not} the
+  imputed or scaled data here.
+\end{itemize}
+
+    When you call \texttt{fit} on the pipeline, it carries out the following
+steps:
+
+\begin{itemize}
+\tightlist
+\item
+  Fit \texttt{SimpleImputer} on \texttt{X\_train}
+\item
+  Transform \texttt{X\_train} using the fit \texttt{SimpleImputer} to
+  create \texttt{X\_train\_imp}
+\item
+  Fit \texttt{StandardScaler} on \texttt{X\_train\_imp}
+\item
+  Transform \texttt{X\_train\_imp} using the fit \texttt{StandardScaler}
+  to create \texttt{X\_train\_imp\_scaled}
+\item
+  Fit the model (\texttt{KNeighborsRegressor} in our case) on
+  \texttt{X\_train\_imp\_scaled}
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{48}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{pipe}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{48}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+array([126500., 117380., 187700., {\ldots}, 259500., 308120.,  60860.])
+\end{Verbatim}
+\end{tcolorbox}
+        
+    Note that we are passing original data to \texttt{predict} as well. This
+time the pipeline is carrying out following steps: - Transform
+\texttt{X\_train} using the fit \texttt{SimpleImputer} to create
+\texttt{X\_train\_imp} - Transform \texttt{X\_train\_imp} using the fit
+\texttt{StandardScaler} to create \texttt{X\_train\_imp\_scaled} -
+Predict using the fit model (\texttt{KNeighborsRegressor} in our case)
+on \texttt{X\_train\_imp\_scaled}.
+
+    \includegraphics{/Users/charleenchu/Desktop/school/cpsc330-2023W2/lectures/img/pipeline.png}
+
+\href{https://amueller.github.io/COMS4995-s20/slides/aml-04-preprocessing/\#18}{Source}
+
+    \subsubsection{Let's try cross-validation with our
+pipeline}\label{lets-try-cross-validation-with-our-pipeline}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{49}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{results\PYZus{}dict}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{imp + scaling + knn}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{mean\PYZus{}std\PYZus{}cross\PYZus{}val\PYZus{}scores}\PY{p}{(}
+    \PY{n}{pipe}\PY{p}{,} \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{return\PYZus{}train\PYZus{}score}\PY{o}{=}\PY{k+kc}{True}
+\PY{p}{)}
+\PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{results\PYZus{}dict}\PY{p}{)}\PY{o}{.}\PY{n}{T}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{49}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+                              fit\_time         score\_time          test\_score  \textbackslash{}
+dummy                0.002 (+/- 0.001)  0.001 (+/- 0.000)  -0.055 (+/- 0.012)
+imp + scaling + knn  0.016 (+/- 0.008)  0.075 (+/- 0.011)   0.693 (+/- 0.014)
+
+                            train\_score
+dummy                -0.055 (+/- 0.001)
+imp + scaling + knn   0.797 (+/- 0.015)
+\end{Verbatim}
+\end{tcolorbox}
+        
+    Using a \texttt{Pipeline} takes care of applying the
+\texttt{fit\_transform} on the train portion and only \texttt{transform}
+on the validation portion in each fold.
+
+    
+
+    \subsection{\texorpdfstring{Categorical features
+{[}\href{https://youtu.be/2mJ9rAhMMl0}{video}{]}}{Categorical features {[}video{]}}}\label{categorical-features-video}
+
+    \begin{itemize}
+\item
+  Recall that we had dropped the categorical feature
+  \texttt{ocean\_proximity} feature from the dataframe. But it could
+  potentially be a useful feature in this task.
+\item
+  Let's create our \texttt{X\_train} and and \texttt{X\_test} again by
+  keeping the feature in the data.
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{50}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X\PYZus{}train}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{50}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+       longitude  latitude  housing\_median\_age  households  median\_income  \textbackslash{}
+6051     -117.75     34.04                22.0       602.0         3.1250
+20113    -119.57     37.94                17.0        20.0         3.4861
+14289    -117.13     32.74                46.0       708.0         2.6604
+13665    -117.31     34.02                18.0       285.0         5.2139
+14471    -117.23     32.88                18.0      1458.0         1.8580
+{\ldots}          {\ldots}       {\ldots}                 {\ldots}         {\ldots}            {\ldots}
+7763     -118.10     33.91                36.0       130.0         3.6389
+15377    -117.24     33.37                14.0       779.0         4.5391
+17730    -121.76     37.33                 5.0       697.0         5.6306
+15725    -122.44     37.78                44.0       326.0         3.8750
+19966    -119.08     36.21                20.0       348.0         2.5156
+
+       rooms\_per\_household  bedrooms\_per\_household  population\_per\_household
+6051              4.897010                1.056478                  4.318937
+20113            17.300000                6.500000                  2.550000
+14289             4.738701                1.084746                  2.057910
+13665             5.733333                0.961404                  3.154386
+14471             3.817558                1.004801                  4.323045
+{\ldots}                    {\ldots}                     {\ldots}                       {\ldots}
+7763              5.584615                     NaN                  3.769231
+15377             6.016688                1.017972                  3.127086
+17730             5.958393                1.031564                  3.493544
+15725             4.739264                1.024540                  1.720859
+19966             5.491379                1.117816                  3.566092
+
+[18576 rows x 8 columns]
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{51}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X\PYZus{}train} \PY{o}{=} \PY{n}{train\PYZus{}df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median\PYZus{}house\PYZus{}value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+\PY{n}{y\PYZus{}train} \PY{o}{=} \PY{n}{train\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median\PYZus{}house\PYZus{}value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+
+\PY{n}{X\PYZus{}test} \PY{o}{=} \PY{n}{test\PYZus{}df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median\PYZus{}house\PYZus{}value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+\PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{test\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median\PYZus{}house\PYZus{}value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{itemize}
+\tightlist
+\item
+  Let's try to build a \texttt{KNeighborRegressor} on this data using
+  our pipeline
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{52}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}pipe.fit(X\PYZus{}train, X\PYZus{}train)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{itemize}
+\tightlist
+\item
+  This failed because we have non-numeric data.
+\item
+  Imagine how \(k\)-NN would calculate distances when you have
+  non-numeric features.
+\end{itemize}
+
+    \subsubsection{Can we use this feature in the
+model?}\label{can-we-use-this-feature-in-the-model}
+
+\begin{itemize}
+\tightlist
+\item
+  In \texttt{scikit-learn}, most algorithms require numeric inputs.
+\item
+  Decision trees could theoretically work with categorical features.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    However, the sklearn implementation does not support this.
+  \end{itemize}
+\end{itemize}
+
+    \subsubsection{What are the options?}\label{what-are-the-options}
+
+\begin{itemize}
+\tightlist
+\item
+  Drop the column (not recommended)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    If you know that the column is not relevant to the target in any way
+    you may drop it.
+  \end{itemize}
+\item
+  We can transform categorical features to numeric ones so that we can
+  use them in the model.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \href{https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OrdinalEncoder.html}{Ordinal
+    encoding} (occasionally recommended)
+  \item
+    One-hot encoding (recommended in most cases) (this lecture)
+  \end{itemize}
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{53}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X\PYZus{}toy} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}
+    \PY{p}{\PYZob{}}
+        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{language}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{p}{[}
+            \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{English}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+            \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Vietnamese}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+            \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{English}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+            \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mandarin}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+            \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{English}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+            \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{English}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+            \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mandarin}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+            \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{English}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+            \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Vietnamese}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+            \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mandarin}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+            \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{French}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+            \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Spanish}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+            \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mandarin}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+            \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Hindi}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+        \PY{p}{]}
+    \PY{p}{\PYZcb{}}
+\PY{p}{)}
+\PY{n}{X\PYZus{}toy}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{53}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+      language
+0      English
+1   Vietnamese
+2      English
+3     Mandarin
+4      English
+5      English
+6     Mandarin
+7      English
+8   Vietnamese
+9     Mandarin
+10      French
+11     Spanish
+12    Mandarin
+13       Hindi
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \subsubsection{Ordinal encoding (occasionally
+recommended)}\label{ordinal-encoding-occasionally-recommended}
+
+\begin{itemize}
+\tightlist
+\item
+  Here we simply assign an integer to each of our unique categorical
+  labels.
+\item
+  We can use sklearn's
+  \href{https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OrdinalEncoder.html}{\texttt{OrdinalEncoder}}.
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{54}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{preprocessing} \PY{k+kn}{import} \PY{n}{OrdinalEncoder}
+
+\PY{n}{enc} \PY{o}{=} \PY{n}{OrdinalEncoder}\PY{p}{(}\PY{p}{)}
+\PY{n}{enc}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}toy}\PY{p}{)}
+\PY{n}{X\PYZus{}toy\PYZus{}ord} \PY{o}{=} \PY{n}{enc}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{n}{X\PYZus{}toy}\PY{p}{)}
+\PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}
+    \PY{n}{data}\PY{o}{=}\PY{n}{X\PYZus{}toy\PYZus{}ord}\PY{p}{,}
+    \PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{language\PYZus{}enc}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,}
+    \PY{n}{index}\PY{o}{=}\PY{n}{X\PYZus{}toy}\PY{o}{.}\PY{n}{index}\PY{p}{,}
+\PY{p}{)}
+\PY{n}{pd}\PY{o}{.}\PY{n}{concat}\PY{p}{(}\PY{p}{[}\PY{n}{X\PYZus{}toy}\PY{p}{,} \PY{n}{df}\PY{p}{]}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{54}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+      language  language\_enc
+0      English           0.0
+1   Vietnamese           5.0
+2      English           0.0
+3     Mandarin           3.0
+4      English           0.0
+5      English           0.0
+6     Mandarin           3.0
+7      English           0.0
+8   Vietnamese           5.0
+9     Mandarin           3.0
+10      French           1.0
+11     Spanish           4.0
+12    Mandarin           3.0
+13       Hindi           2.0
+\end{Verbatim}
+\end{tcolorbox}
+        
+    What's the problem with this approach? - We have imposed ordinality on
+the categorical data. - For example, imagine when you are calculating
+distances. Is it fair to say that French and Hindi are closer than
+French and Spanish? - In general, label encoding is useful if there is
+ordinality in your data and capturing it is important for your problem,
+e.g., \texttt{{[}cold,\ warm,\ hot{]}}.
+
+    \paragraph{One-hot encoding (OHE)}\label{one-hot-encoding-ohe}
+
+\begin{itemize}
+\item
+  Create new binary columns to represent our categories.
+\item
+  If we have \(c\) categories in our column.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    We create \(c\) new binary columns to represent those categories.
+  \end{itemize}
+\item
+  Example: Imagine a language column which has the information on
+  whether you
+\item
+  We can use sklearn's
+  \href{https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html}{\texttt{OneHotEncoder}}
+  to do so.
+\end{itemize}
+
+    \texttt{\{note\}\ One-hot\ encoding\ is\ called\ one-hot\ because\ only\ one\ of\ the\ newly\ created\ features\ is\ 1\ for\ each\ data\ point.}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{56}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{preprocessing} \PY{k+kn}{import} \PY{n}{OneHotEncoder}
+
+\PY{n}{enc} \PY{o}{=} \PY{n}{OneHotEncoder}\PY{p}{(}\PY{n}{handle\PYZus{}unknown}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ignore}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{sparse\PYZus{}output}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+\PY{n}{enc}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}toy}\PY{p}{)}
+\PY{n}{X\PYZus{}toy\PYZus{}ohe} \PY{o}{=} \PY{n}{enc}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{n}{X\PYZus{}toy}\PY{p}{)}
+\PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}
+    \PY{n}{data}\PY{o}{=}\PY{n}{X\PYZus{}toy\PYZus{}ohe}\PY{p}{,}
+    \PY{n}{columns}\PY{o}{=}\PY{n}{enc}\PY{o}{.}\PY{n}{get\PYZus{}feature\PYZus{}names\PYZus{}out}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{language}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{p}{,}
+    \PY{n}{index}\PY{o}{=}\PY{n}{X\PYZus{}toy}\PY{o}{.}\PY{n}{index}\PY{p}{,}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{56}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+    language\_English  language\_French  language\_Hindi  language\_Mandarin  \textbackslash{}
+0                1.0              0.0             0.0                0.0
+1                0.0              0.0             0.0                0.0
+2                1.0              0.0             0.0                0.0
+3                0.0              0.0             0.0                1.0
+4                1.0              0.0             0.0                0.0
+5                1.0              0.0             0.0                0.0
+6                0.0              0.0             0.0                1.0
+7                1.0              0.0             0.0                0.0
+8                0.0              0.0             0.0                0.0
+9                0.0              0.0             0.0                1.0
+10               0.0              1.0             0.0                0.0
+11               0.0              0.0             0.0                0.0
+12               0.0              0.0             0.0                1.0
+13               0.0              0.0             1.0                0.0
+
+    language\_Spanish  language\_Vietnamese
+0                0.0                  0.0
+1                0.0                  1.0
+2                0.0                  0.0
+3                0.0                  0.0
+4                0.0                  0.0
+5                0.0                  0.0
+6                0.0                  0.0
+7                0.0                  0.0
+8                0.0                  1.0
+9                0.0                  0.0
+10               0.0                  0.0
+11               1.0                  0.0
+12               0.0                  0.0
+13               0.0                  0.0
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \subsubsection{Let's do it on our housing
+data}\label{lets-do-it-on-our-housing-data}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{58}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{ohe} \PY{o}{=} \PY{n}{OneHotEncoder}\PY{p}{(}\PY{n}{sparse\PYZus{}output}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,} \PY{n}{dtype}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{int}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ohe}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{[}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ocean\PYZus{}proximity}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\PY{n}{X\PYZus{}imp\PYZus{}ohe\PYZus{}train} \PY{o}{=} \PY{n}{ohe}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{[}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ocean\PYZus{}proximity}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{itemize}
+\tightlist
+\item
+  We can look at the new features created using \texttt{categories\_}
+  attribute
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{59}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{ohe}\PY{o}{.}\PY{n}{categories\PYZus{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{59}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+[array(['<1H OCEAN', 'INLAND', 'ISLAND', 'NEAR BAY', 'NEAR OCEAN'],
+       dtype=object)]
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{60}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{transformed\PYZus{}ohe} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}
+    \PY{n}{data}\PY{o}{=}\PY{n}{X\PYZus{}imp\PYZus{}ohe\PYZus{}train}\PY{p}{,}
+    \PY{n}{columns}\PY{o}{=}\PY{n}{ohe}\PY{o}{.}\PY{n}{get\PYZus{}feature\PYZus{}names\PYZus{}out}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ocean\PYZus{}proximity}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}\PY{p}{,}
+    \PY{n}{index}\PY{o}{=}\PY{n}{X\PYZus{}train}\PY{o}{.}\PY{n}{index}\PY{p}{,}
+\PY{p}{)}
+\PY{n}{transformed\PYZus{}ohe}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{60}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+       ocean\_proximity\_<1H OCEAN  ocean\_proximity\_INLAND  \textbackslash{}
+6051                           0                       1
+20113                          0                       1
+14289                          0                       0
+13665                          0                       1
+14471                          0                       0
+{\ldots}                          {\ldots}                     {\ldots}
+7763                           1                       0
+15377                          1                       0
+17730                          1                       0
+15725                          0                       0
+19966                          0                       1
+
+       ocean\_proximity\_ISLAND  ocean\_proximity\_NEAR BAY  \textbackslash{}
+6051                        0                         0
+20113                       0                         0
+14289                       0                         0
+13665                       0                         0
+14471                       0                         0
+{\ldots}                       {\ldots}                       {\ldots}
+7763                        0                         0
+15377                       0                         0
+17730                       0                         0
+15725                       0                         1
+19966                       0                         0
+
+       ocean\_proximity\_NEAR OCEAN
+6051                            0
+20113                           0
+14289                           1
+13665                           0
+14471                           1
+{\ldots}                           {\ldots}
+7763                            0
+15377                           0
+17730                           0
+15725                           0
+19966                           0
+
+[18576 rows x 5 columns]
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+One-hot encoded variables are also referred to as \textbf{dummy
+variables}. You will often see people using
+\href{https://pandas.pydata.org/docs/reference/api/pandas.get_dummies.html}{\texttt{get\_dummies}
+method of pandas} to convert categorical variables into dummy variables.
+That said, using \texttt{sklearn}'s \texttt{OneHotEncoder} has the
+advantage of making it easy to treat training and test set in a
+consistent way.\\
+\_\_\_
+
+    \subsection{❓❓ Questions for you}\label{questions-for-you}
+
+    \subsubsection{(iClicker) Exercise 5.3}\label{iclicker-exercise-5.3}
+
+\textbf{iClicker cloud join link: https://join.iclicker.com/WMSX}
+
+\textbf{Select all of the following statements which are TRUE.}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  You can have scaling of numeric features, one-hot encoding of
+  categorical features, and \texttt{scikit-learn} estimator within a
+  single pipeline.\\
+\item
+  Once you have a \texttt{scikit-learn} pipeline object with an
+  estimator as the last step, you can call \texttt{fit},
+  \texttt{predict}, and \texttt{score} on it.
+\item
+  You can carry out data splitting within \texttt{scikit-learn}
+  pipeline.
+\item
+  We have to be careful of the order we put each transformation and
+  model in a pipeline.
+\item
+  If you call \texttt{cross\_validate} with a pipeline object, it will
+  call \texttt{fit} and \texttt{transform} on the training fold and only
+  \texttt{transform} on the validation fold.
+\end{enumerate}
+
+    \subsection{What did we learn today?}\label{what-did-we-learn-today}
+
+\begin{itemize}
+\tightlist
+\item
+  Motivation for preprocessing
+\item
+  Common preprocessing steps
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Imputation
+  \item
+    Scaling
+  \item
+    One-hot encoding
+  \end{itemize}
+\item
+  Golden rule in the context of preprocessing
+\item
+  Building simple supervised machine learning pipelines using
+  \texttt{sklearn.pipeline.make\_pipeline}.
+\end{itemize}
+
+    \subsubsection{Problem: Different transformations on different
+columns}\label{problem-different-transformations-on-different-columns}
+
+\begin{itemize}
+\tightlist
+\item
+  How do we put this together with other columns in the data before
+  fitting the regressor?
+\item
+  Before we fit our regressor, we want to apply different
+  transformations on different columns
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Numeric columns
+
+    \begin{itemize}
+    \tightlist
+    \item
+      imputation
+    \item
+      scaling\\
+    \end{itemize}
+  \item
+    Categorical columns
+
+    \begin{itemize}
+    \tightlist
+    \item
+      imputation
+    \item
+      one-hot encoding
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+    \textbf{Coming up: sklearn's
+\href{https://scikit-learn.org/stable/modules/generated/sklearn.compose.ColumnTransformer.html}{\texttt{ColumnTransformer}}!!}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}

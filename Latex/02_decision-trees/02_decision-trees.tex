@@ -1,0 +1,2525 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+
+    \usepackage{iftex}
+    \ifPDFTeX
+        \usepackage[T1]{fontenc}
+        \IfFileExists{alphabeta.sty}{
+              \usepackage{alphabeta}
+          }{
+              \usepackage[mathletters]{ucs}
+              \usepackage[utf8x]{inputenc}
+          }
+    \else
+        \usepackage{fontspec}
+        \usepackage{unicode-math}
+    \fi
+
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage{array}     % table support for pandoc >= 2.11.3
+    \usepackage{calc}      % table minipage width calculation for pandoc >= 2.11.1
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{soul}      % strikethrough (\st) support for pandoc >= 3.0.0
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+
+
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{02\_decision-trees}
+    
+    
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.61,0.40,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.80,0.25,0.22}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.46,0.46,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.41,0.47,0.13}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.36,0.12}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.52,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{0.89,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@ges}{\let\PY@bf=\textbf\let\PY@it=\textit}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb.
+    \makeatletter
+        \newbox\Wrappedcontinuationbox
+        \newbox\Wrappedvisiblespacebox
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}}
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}}
+        \newcommand*\Wrappedcontinuationindent {3ex }
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox}
+        % Take advantage of the already applied Pygments mark-up to insert
+        % potential linebreaks for TeX processing.
+        %        {, <, #, %, $, ' and ": go to next line.
+        %        _, }, ^, &, >, - and ~: stay at end of broken line.
+        % Use of \textquotesingle for straight quote.
+        \newcommand*\Wrappedbreaksatspecials {%
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}%
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}%
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}%
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}%
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}%
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}%
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}%
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}%
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}%
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}%
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}%
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}%
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}%
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}%
+        }
+        % Some characters . , ; ? ! / are not pygmentized.
+        % This macro makes them "active" and they will insert potential linebreaks
+        \newcommand*\Wrappedbreaksatpunct {%
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}%
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}%
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}%
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}%
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}%
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}%
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}%
+            \catcode`\.\active
+            \catcode`\,\active
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active
+            \lccode`\~`\~
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \includegraphics{/Users/charleenchu/Desktop/school/cpsc330-2023W2/lectures/img/330-banner.png}
+
+    \section{Lecture 2: Terminology, Baselines, Decision
+Trees}\label{lecture-2-terminology-baselines-decision-trees}
+
+UBC 2023-24
+
+Instructors: Mathias Lécuyer and Mehrdad Oveisi
+
+    \subsubsection{Announcements}\label{announcements}
+
+\begin{itemize}
+\tightlist
+\item
+  Things due next Monday
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Homework 0 (Syllabus quiz, on PrairieLearn): Sept 15, 11:59pm
+  \item
+    Homework 1 (hw1 on github, submitted to PrairieLearn): Sept 15,
+    11:59pm
+  \end{itemize}
+\item
+  You can find the tentative due dates for all deliverables
+  \href{https://github.com/UBC-CS/cpsc330-2023W2/tree/main\#deliverable-due-dates-tentative}{here}.
+\item
+  Please monitor Piazza (especially pinned posts and instructor posts)
+  for announcements.
+\end{itemize}
+
+    \subsection{Imports, LOs}\label{imports-los}
+
+    \subsubsection{Imports}\label{imports}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{os}
+\PY{k+kn}{import} \PY{n+nn}{re}
+\PY{k+kn}{import} \PY{n+nn}{sys}
+
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+
+\PY{n}{sys}\PY{o}{.}\PY{n}{path}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../code/.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{k+kn}{import} \PY{n+nn}{graphviz}
+\PY{k+kn}{import} \PY{n+nn}{IPython}
+\PY{c+c1}{\PYZsh{}import mglearn}
+\PY{k+kn}{from} \PY{n+nn}{IPython}\PY{n+nn}{.}\PY{n+nn}{display} \PY{k+kn}{import} \PY{n}{HTML}\PY{p}{,} \PY{n}{display}
+\PY{k+kn}{from} \PY{n+nn}{plotting\PYZus{}functions} \PY{k+kn}{import} \PY{o}{*}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{dummy} \PY{k+kn}{import} \PY{n}{DummyClassifier}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{tree} \PY{k+kn}{import} \PY{n}{DecisionTreeClassifier}\PY{p}{,} \PY{n}{DecisionTreeRegressor}\PY{p}{,} \PY{n}{export\PYZus{}graphviz}
+\PY{k+kn}{from} \PY{n+nn}{utils} \PY{k+kn}{import} \PY{o}{*}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{rcParams}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{font.size}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{16}
+\PY{n}{pd}\PY{o}{.}\PY{n}{set\PYZus{}option}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{display.max\PYZus{}colwidth}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+m+mi}{200}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsubsection{Learning outcomes}\label{learning-outcomes}
+
+From this lecture, you will be able to
+
+\begin{itemize}
+\tightlist
+\item
+  identify whether a given problem could be solved using supervised
+  machine learning or not;
+\item
+  differentiate between supervised and unsupervised machine learning;
+\item
+  explain machine learning terminology such as features, targets,
+  predictions, training, and error;
+\item
+  differentiate between classification and regression problems;
+\item
+  use \texttt{DummyClassifier} and \texttt{DummyRegressor} as baselines
+  for machine learning problems;
+\item
+  explain the \texttt{fit} and \texttt{predict} paradigm and use
+  \texttt{score} method of ML models;
+\item
+  broadly describe how decision tree prediction works;
+\item
+  use \texttt{DecisionTreeClassifier} and \texttt{DecisionTreeRegressor}
+  to build decision trees using \texttt{scikit-learn};
+\item
+  visualize decision trees;
+\item
+  explain the difference between parameters and hyperparameters;
+\item
+  explain the concept of decision boundaries;
+\item
+  explain the relation between model complexity and decision boundaries.
+\end{itemize}
+
+    
+
+    \subsection{\texorpdfstring{Terminology
+{[}\href{https://youtu.be/YNT8n4cXu4A}{video}{]}}{Terminology {[}video{]}}}\label{terminology-video}
+
+You will see a lot of variable terminology in machine learning and
+statistics. Let's familiarize ourselves with some of the basic
+terminology used in ML.
+
+    \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+Check out \href{https://youtu.be/YNT8n4cXu4A}{the accompanying video} on
+this material. \_\_\_
+
+    \subsubsection{Big picture and datasets}\label{big-picture-and-datasets}
+
+    In this lecture, we'll talk about our first machine learning model:
+Decision trees. We will also familiarize ourselves with some common
+terminology in supervised machine learning.
+
+    \subsubsection{Toy datasets}\label{toy-datasets}
+
+Later in the course we will use larger datasets from Kaggle, for
+instance. But for our first couple of lectures, we will be working with
+the following three toy datasets:
+
+\begin{itemize}
+\tightlist
+\item
+  \href{data/quiz2-grade-toy-classification.csv}{Quiz2 grade prediction
+  classification dataset}
+\item
+  \href{data/quiz2-grade-toy-regression.csv}{Quiz2 grade prediction
+  regression dataset}
+\item
+  \href{canada_usa_cities.csv}{Canada USA cities dataset}
+\end{itemize}
+
+    \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+If it's not necessary for you to understand the code, I will put it in
+one of the files under the \texttt{code} directory to avoid clutter in
+this notebook. For example, most of the plotting code is going to be in
+\texttt{code/plotting\_functions.py}. \_\_\_
+
+    I'll be using the following grade prediction toy dataset to demonstrate
+the terminology. Imagine that you are taking a course with four home
+work assignments and two quizzes. You and your friends are quite nervous
+about your quiz2 grades and you want to know how will you do based on
+your previous performance and some other attributes. So you decide to
+collect some data from your friends from last year and train a
+supervised machine learning model for quiz2 grade prediction.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{classification\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../data/quiz2\PYZhy{}grade\PYZhy{}toy\PYZhy{}classification.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{classification\PYZus{}df}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+\PY{n}{classification\PYZus{}df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+(21, 8)
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   ml\_experience  class\_attendance  lab1  lab2  lab3  lab4  quiz1   quiz2
+0              1                 1    92    93    84    91     92      A+
+1              1                 0    94    90    80    83     91  not A+
+2              0                 0    78    85    83    80     80  not A+
+3              0                 1    91    94    92    91     89      A+
+4              0                 1    77    83    90    92     85      A+
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \subsubsection{Recap: Supervised machine
+learning}\label{recap-supervised-machine-learning}
+
+\includegraphics{/Users/charleenchu/Desktop/school/cpsc330-2023W2/lectures/img/sup-learning.png}
+
+    \subsubsection{Tabular data}\label{tabular-data}
+
+In supervised machine learning, the input data is typically organized in
+a \textbf{tabular} format, where rows are \textbf{examples} and columns
+are \textbf{features}. One of the columns is typically the
+\textbf{target}.
+
+\includegraphics{/Users/charleenchu/Desktop/school/cpsc330-2023W2/lectures/img/sup-ml-terminology.png}
+
+    \begin{description}
+\tightlist
+\item[\textbf{Features}]
+Features are relevant characteristics of the problem, usually suggested
+by experts. Features are typically denoted by \(X\) and the number of
+features is usually denoted by \(d\).
+\item[\textbf{Target}]
+Target is the feature we want to predict (typically denoted by \(y\)).
+\item[\textbf{Example}]
+A row of feature values. When people refer to an example, it may or may
+not include the target corresponding to the feature values, depending
+upon the context. The number of examples is usually denoted by \(n\).
+\item[\textbf{Training}]
+The process of learning the mapping between the features (\(X\)) and the
+target (\(y\)).
+\end{description}
+
+    \paragraph{Example: Tabular data for grade
+prediction}\label{example-tabular-data-for-grade-prediction}
+
+The tabular data usually contains both: the features (\texttt{X}) and
+the target (\texttt{y}).
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{classification\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../data/quiz2\PYZhy{}grade\PYZhy{}toy\PYZhy{}classification.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{classification\PYZus{}df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   ml\_experience  class\_attendance  lab1  lab2  lab3  lab4  quiz1   quiz2
+0              1                 1    92    93    84    91     92      A+
+1              1                 0    94    90    80    83     91  not A+
+2              0                 0    78    85    83    80     80  not A+
+3              0                 1    91    94    92    91     89      A+
+4              0                 1    77    83    90    92     85      A+
+\end{Verbatim}
+\end{tcolorbox}
+        
+    So the first step in training a supervised machine learning model is
+separating \texttt{X} and \texttt{y}.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X} \PY{o}{=} \PY{n}{classification\PYZus{}df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{quiz2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+\PY{n}{y} \PY{o}{=} \PY{n}{classification\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{quiz2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{n}{X}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   ml\_experience  class\_attendance  lab1  lab2  lab3  lab4  quiz1
+0              1                 1    92    93    84    91     92
+1              1                 0    94    90    80    83     91
+2              0                 0    78    85    83    80     80
+3              0                 1    91    94    92    91     89
+4              0                 1    77    83    90    92     85
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{y}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+0        A+
+1    not A+
+2    not A+
+3        A+
+4        A+
+Name: quiz2, dtype: object
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \paragraph{Example: Tabular data for the housing price
+prediction}\label{example-tabular-data-for-the-housing-price-prediction}
+
+Here is an example of tabular data for housing price prediction. You can
+download the data from
+\href{https://www.kaggle.com/harlfoxem/housesalesprediction}{here}.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{housing\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{data/kc\PYZus{}house\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{housing\PYZus{}df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{id}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{date}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{inplace}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{HTML}\PY{p}{(}\PY{n}{housing\PYZus{}df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{to\PYZus{}html}\PY{p}{(}\PY{n}{index}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+<IPython.core.display.HTML object>
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X} \PY{o}{=} \PY{n}{housing\PYZus{}df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{price}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+\PY{n}{y} \PY{o}{=} \PY{n}{housing\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{price}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{n}{X}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   bedrooms  bathrooms  sqft\_living  sqft\_lot  floors  waterfront  view  \textbackslash{}
+0         3       1.00         1180      5650     1.0           0     0
+1         3       2.25         2570      7242     2.0           0     0
+2         2       1.00          770     10000     1.0           0     0
+3         4       3.00         1960      5000     1.0           0     0
+4         3       2.00         1680      8080     1.0           0     0
+
+   condition  grade  sqft\_above  sqft\_basement  yr\_built  yr\_renovated  \textbackslash{}
+0          3      7        1180              0      1955             0
+1          3      7        2170            400      1951          1991
+2          3      6         770              0      1933             0
+3          5      7        1050            910      1965             0
+4          3      8        1680              0      1987             0
+
+   zipcode      lat     long  sqft\_living15  sqft\_lot15
+0    98178  47.5112 -122.257           1340        5650
+1    98125  47.7210 -122.319           1690        7639
+2    98028  47.7379 -122.233           2720        8062
+3    98136  47.5208 -122.393           1360        5000
+4    98074  47.6168 -122.045           1800        7503
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{y}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+0    221900.0
+1    538000.0
+2    180000.0
+3    604000.0
+4    510000.0
+Name: price, dtype: float64
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X}\PY{o}{.}\PY{n}{shape}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+(21613, 18)
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+To a machine, column names (features) have no meaning. Only feature
+values and how they vary across examples mean something. \_\_\_
+
+    
+
+    \paragraph{Alternative terminology for examples, features, targets, and
+training}\label{alternative-terminology-for-examples-features-targets-and-training}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{examples} = rows = samples = records = instances
+\item
+  \textbf{features} = inputs = predictors = explanatory variables =
+  regressors = independent variables = covariates
+\item
+  \textbf{targets} = outputs = outcomes = response variable = dependent
+  variable = labels (if categorical).
+\item
+  \textbf{training} = learning = fitting
+\end{itemize}
+
+    \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+Check out
+\href{https://ubc-mds.github.io/resources_pages/terminology/}{the MDS
+terminology document}. \_\_\_
+
+    
+
+    \subsubsection{Supervised learning vs.~Unsupervised
+learning}\label{supervised-learning-vs.-unsupervised-learning}
+
+In \textbf{supervised learning}, training data comprises a set of
+features (\(X\)) and their corresponding targets (\(y\)). We wish to
+find a \textbf{model function \(f\)} that relates \(X\) to \(y\). Then
+use that model function \textbf{to predict the targets} of new examples.
+
+\includegraphics{/Users/charleenchu/Desktop/school/cpsc330-2023W2/lectures/img/sup-learning.png}
+
+    In \textbf{unsupervised learning} training data consists of observations
+(\(X\)) \textbf{without any corresponding targets}. Unsupervised
+learning could be used to \textbf{group similar things together} in
+\(X\) or to provide \textbf{concise summary} of the data. We'll learn
+more about this topic in later videos.
+
+\includegraphics{/Users/charleenchu/Desktop/school/cpsc330-2023W2/lectures/img/unsup-learning.png}
+
+    Supervised machine learning is about function approximation, i.e.,
+finding the mapping function between \texttt{X} and \texttt{y} whereas
+unsupervised machine learning is about concisely describing the data.
+
+    
+
+    \subsubsection{Classification
+vs.~Regression}\label{classification-vs.-regression}
+
+In supervised machine learning, there are two main kinds of learning
+problems based on what they are trying to predict. -
+\textbf{Classification problem}: predicting among two or more discrete
+classes - Example1: Predict whether a patient has a liver disease or not
+- Example2: Predict whether a student would get an A+ or not in quiz2.\\
+- \textbf{Regression problem}: predicting a continuous value - Example1:
+Predict housing prices - Example2: Predict a student's score in quiz2.
+
+    \includegraphics{/Users/charleenchu/Desktop/school/cpsc330-2023W2/lectures/img/classification-vs-regression.png}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} quiz2 classification toy data}
+\PY{n}{classification\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../data/quiz2\PYZhy{}grade\PYZhy{}toy\PYZhy{}classification.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{classification\PYZus{}df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{4}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   ml\_experience  class\_attendance  lab1  lab2  lab3  lab4  quiz1   quiz2
+0              1                 1    92    93    84    91     92      A+
+1              1                 0    94    90    80    83     91  not A+
+2              0                 0    78    85    83    80     80  not A+
+3              0                 1    91    94    92    91     89      A+
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} quiz2 regression toy data}
+\PY{n}{regression\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../data/quiz2\PYZhy{}grade\PYZhy{}toy\PYZhy{}regression.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{regression\PYZus{}df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{4}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   ml\_experience  class\_attendance  lab1  lab2  lab3  lab4  quiz1  quiz2
+0              1                 1    92    93    84    91     92     90
+1              1                 0    94    90    80    83     91     84
+2              0                 0    78    85    83    80     80     82
+3              0                 1    91    94    92    91     89     92
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{classification\PYZus{}df}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+    ml\_experience  class\_attendance  lab1  lab2  lab3  lab4  quiz1   quiz2
+0               1                 1    92    93    84    91     92      A+
+1               1                 0    94    90    80    83     91  not A+
+2               0                 0    78    85    83    80     80  not A+
+3               0                 1    91    94    92    91     89      A+
+4               0                 1    77    83    90    92     85      A+
+5               1                 0    70    73    68    74     71  not A+
+6               1                 0    80    88    89    88     91      A+
+7               0                 1    95    93    69    79     75  not A+
+8               0                 0    97    90    94    99     80  not A+
+9               1                 1    95    95    94    94     85  not A+
+10              0                 1    98    86    95    95     78      A+
+11              1                 1    95    88    93    92     85      A+
+12              1                 1    98    96    96    99    100      A+
+13              0                 1    95    94    96    95    100      A+
+14              0                 1    95    90    93    95     70  not A+
+15              1                 0    92    85    67    94     92  not A+
+16              0                 0    75    91    93    86     85      A+
+17              1                 0    86    89    65    86     87  not A+
+18              1                 1    91    93    90    88     82  not A+
+19              0                 1    77    94    87    81     89  not A+
+20              1                 1    96    92    92    96     87      A+
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{classification\PYZus{}df}\PY{o}{.}\PY{n}{shape}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+(21, 8)
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \subsection{❓❓ Questions for you}\label{questions-for-you}
+
+    \subsubsection{Exercise 2.1 Select all of the following statements which
+are examples of supervised machine
+learning}\label{exercise-2.1-select-all-of-the-following-statements-which-are-examples-of-supervised-machine-learning}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  How many examples and features are there in the housing price data
+  above? You can use \texttt{df.shape} to get number of rows and columns
+  in a dataframe.
+\item
+  For each of the following examples what would be the relevant features
+  and what would be the target?
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    Sentiment analysis
+  \item
+    Fraud detection
+  \item
+    Face recognition
+  \end{enumerate}
+\end{enumerate}
+
+    
+
+    \subsubsection{iClicker Exercise 2.2 Supervised vs
+unsupervised}\label{iclicker-exercise-2.2-supervised-vs-unsupervised}
+
+\textbf{iClicker cloud join link: https://join.iclicker.com/WMSX}
+
+\textbf{Select all of the following statements which are examples of
+supervised machine learning}
+
+\begin{itemize}
+\tightlist
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \tightlist
+  \item
+    Finding groups of similar properties in a real estate data set.
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \setcounter{enumi}{1}
+  \tightlist
+  \item
+    Predicting whether someone will have a heart attack or not on the
+    basis of demographic, diet, and clinical measurement.
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \setcounter{enumi}{2}
+  \tightlist
+  \item
+    Grouping articles on different topics from different news sources
+    (something like the Google News app).
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \setcounter{enumi}{3}
+  \tightlist
+  \item
+    Detecting credit card fraud based on examples of fraudulent and
+    non-fraudulent transactions.
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \setcounter{enumi}{4}
+  \tightlist
+  \item
+    Given some measure of employee performance, identify the key factors
+    which are likely to influence their performance.
+  \end{enumerate}
+\end{itemize}
+
+    
+
+    \subsubsection{iClicker Exercise 2.3 Classification vs
+regression}\label{iclicker-exercise-2.3-classification-vs-regression}
+
+\textbf{iClicker cloud join link: https://join.iclicker.com/WMSX}
+
+\textbf{Select all of the following statements which are examples of
+regression problems}
+
+\begin{itemize}
+\tightlist
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \tightlist
+  \item
+    Predicting the price of a house based on features such as number of
+    bedrooms and the year built.
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \setcounter{enumi}{1}
+  \tightlist
+  \item
+    Predicting if a house will sell or not based on features like the
+    price of the house, number of rooms, etc.
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \setcounter{enumi}{2}
+  \tightlist
+  \item
+    Predicting percentage grade in CPSC 330 based on past grades.
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \setcounter{enumi}{3}
+  \tightlist
+  \item
+    Predicting whether you should bicycle tomorrow or not based on the
+    weather forecast.
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \setcounter{enumi}{4}
+  \tightlist
+  \item
+    Predicting appropriate thermostat temperature based on the wind
+    speed and the number of people in a room.
+  \end{enumerate}
+\end{itemize}
+
+    
+
+    \subsection{\texorpdfstring{Baselines
+{[}\href{https://youtu.be/6eT5cLL-2Vc}{video}{]}}{Baselines {[}video{]}}}\label{baselines-video}
+
+    \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+Check out \href{https://youtu.be/6eT5cLL-2Vc}{the accompanying video} on
+this material. \_\_\_
+
+    \subsubsection{Supervised learning
+(Reminder)}\label{supervised-learning-reminder}
+
+\begin{itemize}
+\tightlist
+\item
+  Training data \(\rightarrow\) Machine learning algorithm
+  \(\rightarrow\) ML model
+\item
+  Unseen test data + ML model \(\rightarrow\) predictions
+  \includegraphics{/Users/charleenchu/Desktop/school/cpsc330-2023W2/lectures/img/sup-learning.png}
+\end{itemize}
+
+    Let's build a very simple supervised machine learning model for quiz2
+grade prediction problem.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{classification\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../data/quiz2\PYZhy{}grade\PYZhy{}toy\PYZhy{}classification.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{classification\PYZus{}df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   ml\_experience  class\_attendance  lab1  lab2  lab3  lab4  quiz1   quiz2
+0              1                 1    92    93    84    91     92      A+
+1              1                 0    94    90    80    83     91  not A+
+2              0                 0    78    85    83    80     80  not A+
+3              0                 1    91    94    92    91     89      A+
+4              0                 1    77    83    90    92     85      A+
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{classification\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{quiz2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+not A+    11
+A+        10
+Name: quiz2, dtype: int64
+\end{Verbatim}
+\end{tcolorbox}
+        
+    Seems like ``not A+'' occurs more frequently than ``A+''. What if we
+predict ``not A+'' all the time?
+
+    \subsubsection{Baselines}\label{baselines}
+
+\begin{description}
+\tightlist
+\item[\textbf{Baseline}]
+A simple machine learning algorithm based on simple rules of thumb.
+\end{description}
+
+\begin{itemize}
+\tightlist
+\item
+  For example, most frequent baseline always predicts the most frequent
+  label in the training set.
+\item
+  Baselines provide a way to sanity check your machine learning model.
+\end{itemize}
+
+    \subsubsection{\texorpdfstring{\texttt{DummyClassifier}}{DummyClassifier}}\label{dummyclassifier}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{sklearn}'s baseline model for classification\\
+\item
+  Let's train \texttt{DummyClassifier} on the grade prediction dataset.
+\end{itemize}
+
+    \subsubsection{\texorpdfstring{Steps to train a classifier using
+\texttt{sklearn}}{Steps to train a classifier using sklearn}}\label{steps-to-train-a-classifier-using-sklearn}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Read the data
+\item
+  Create \(X\) and \(y\)
+\item
+  Create a classifier object
+\item
+  \texttt{fit} the classifier
+\item
+  \texttt{predict} on new examples
+\item
+  \texttt{score} the model
+\end{enumerate}
+
+    \paragraph{Reading the data}\label{reading-the-data}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{classification\PYZus{}df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   ml\_experience  class\_attendance  lab1  lab2  lab3  lab4  quiz1   quiz2
+0              1                 1    92    93    84    91     92      A+
+1              1                 0    94    90    80    83     91  not A+
+2              0                 0    78    85    83    80     80  not A+
+3              0                 1    91    94    92    91     89      A+
+4              0                 1    77    83    90    92     85      A+
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \paragraph{\texorpdfstring{Create \(X\) and
+\(y\)}{Create X and y}}\label{create-x-and-y}
+
+\begin{itemize}
+\tightlist
+\item
+  \(X\) → Feature vectors
+\item
+  \(y\) → Target
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{17}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X} \PY{o}{=} \PY{n}{classification\PYZus{}df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{quiz2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+\PY{n}{y} \PY{o}{=} \PY{n}{classification\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{quiz2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \paragraph{Create a classifier object}\label{create-a-classifier-object}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{import} the appropriate classifier
+\item
+  Create an object of the classifier
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{18}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{dummy} \PY{k+kn}{import} \PY{n}{DummyClassifier} \PY{c+c1}{\PYZsh{} import the classifier}
+
+\PY{n}{dummy\PYZus{}clf} \PY{o}{=} \PY{n}{DummyClassifier}\PY{p}{(}\PY{n}{strategy}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{most\PYZus{}frequent}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{c+c1}{\PYZsh{} Create a classifier object}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \paragraph{\texorpdfstring{\texttt{fit} the
+classifier}{fit the classifier}}\label{fit-the-classifier}
+
+\begin{itemize}
+\tightlist
+\item
+  The ``learning'' is carried out when we call \texttt{fit} on the
+  classifier object.
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{19}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{dummy\PYZus{}clf}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{)}\PY{p}{;} \PY{c+c1}{\PYZsh{} fit the classifier}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \paragraph{\texorpdfstring{\texttt{predict} the target of given
+examples}{predict the target of given examples}}\label{predict-the-target-of-given-examples}
+
+\begin{itemize}
+\tightlist
+\item
+  We can predict the target of examples by calling \texttt{predict} on
+  the classifier object.
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{20}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{dummy\PYZus{}clf}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X}\PY{p}{)} \PY{c+c1}{\PYZsh{} predict using the trained classifier}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{20}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+array(['not A+', 'not A+', 'not A+', 'not A+', 'not A+', 'not A+',
+       'not A+', 'not A+', 'not A+', 'not A+', 'not A+', 'not A+',
+       'not A+', 'not A+', 'not A+', 'not A+', 'not A+', 'not A+',
+       'not A+', 'not A+', 'not A+'], dtype='<U6')
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \paragraph{\texorpdfstring{\texttt{score} your
+model}{score your model}}\label{score-your-model}
+
+\begin{itemize}
+\item
+  How do you know how well your model is doing?
+\item
+  For classification problems, by default, \texttt{score} gives the
+  \textbf{accuracy} of the model, i.e., proportion of correctly
+  predicted targets.
+
+  \(accuracy = \frac{\text{correct predictions}}{\text{total examples}}\)
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{21}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{The accuracy of the model on the training data: }\PY{l+s+si}{\PYZpc{}0.3f}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{dummy\PYZus{}clf}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+The accuracy of the model on the training data: 0.524
+    \end{Verbatim}
+
+    \begin{itemize}
+\tightlist
+\item
+  Sometimes you will also see people reporting \textbf{error}, which is
+  usually \(1 - accuracy\)
+\item
+  \texttt{score}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    calls \texttt{predict} on \texttt{X}
+  \item
+    compares predictions with \texttt{y} (true targets)
+  \item
+    returns the accuracy in case of classification.
+  \end{itemize}
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{22}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}
+    \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{The error of the model on the training data: }\PY{l+s+si}{\PYZpc{}0.3f}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{l+m+mi}{1} \PY{o}{\PYZhy{}} \PY{n}{dummy\PYZus{}clf}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{)}\PY{p}{)}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+The error of the model on the training data: 0.476
+    \end{Verbatim}
+
+    \paragraph{\texorpdfstring{\texttt{fit}, \texttt{predict} , and
+\texttt{score}
+summary}{fit, predict , and score summary}}\label{fit-predict-and-score-summary}
+
+Here is the general pattern when we build ML models using
+\texttt{sklearn}.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{23}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Create `X` and `y` from the given data}
+\PY{n}{X} \PY{o}{=} \PY{n}{classification\PYZus{}df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{quiz2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+\PY{n}{y} \PY{o}{=} \PY{n}{classification\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{quiz2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+
+\PY{n}{clf} \PY{o}{=} \PY{n}{DummyClassifier}\PY{p}{(}\PY{n}{strategy}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{most\PYZus{}frequent}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{c+c1}{\PYZsh{} Create a class object}
+\PY{n}{clf}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{)} \PY{c+c1}{\PYZsh{} Train/fit the model}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{clf}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{)}\PY{p}{)} \PY{c+c1}{\PYZsh{} Assess the model}
+
+\PY{n}{new\PYZus{}examples} \PY{o}{=} \PY{p}{[}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{92}\PY{p}{,} \PY{l+m+mi}{90}\PY{p}{,} \PY{l+m+mi}{95}\PY{p}{,} \PY{l+m+mi}{93}\PY{p}{,} \PY{l+m+mi}{92}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{92}\PY{p}{,} \PY{l+m+mi}{93}\PY{p}{,} \PY{l+m+mi}{94}\PY{p}{,} \PY{l+m+mi}{92}\PY{p}{]}\PY{p}{]}
+\PY{n}{clf}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{new\PYZus{}examples}\PY{p}{)} \PY{c+c1}{\PYZsh{} Predict on some new data using the trained model}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+0.5238095238095238
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{23}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+array(['not A+', 'not A+'], dtype='<U6')
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \texttt{\{note\}\ \ You\textquotesingle{}ll\ be\ exploring\ dummy\ classifier\ in\ your\ lab!}
+
+    \subsubsection{\texorpdfstring{\href{https://scikit-learn.org/0.15/modules/generated/sklearn.dummy.DummyRegressor.html}{\texttt{DummyRegressor}}}{DummyRegressor}}\label{dummyregressor}
+
+You can also do the same thing for regression problems using
+\texttt{DummyRegressor}, which predicts mean, median, or constant value
+of the training set for all examples.
+
+    \begin{itemize}
+\tightlist
+\item
+  Let's build a regression baseline model using \texttt{sklearn}.
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{24}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{dummy} \PY{k+kn}{import} \PY{n}{DummyRegressor}
+
+\PY{n}{regression\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../data/quiz2\PYZhy{}grade\PYZhy{}toy\PYZhy{}regression.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{c+c1}{\PYZsh{} Read data }
+\PY{n}{X} \PY{o}{=} \PY{n}{regression\PYZus{}df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{quiz2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)} \PY{c+c1}{\PYZsh{} Create `X` and `y` from the given data}
+\PY{n}{y} \PY{o}{=} \PY{n}{regression\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{quiz2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{n}{reg} \PY{o}{=} \PY{n}{DummyRegressor}\PY{p}{(}\PY{p}{)} \PY{c+c1}{\PYZsh{} Create a class object}
+\PY{n}{reg}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{)} \PY{c+c1}{\PYZsh{} Train/fit the model}
+\PY{n}{reg}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{)} \PY{c+c1}{\PYZsh{} Assess the model}
+\PY{n}{new\PYZus{}examples} \PY{o}{=} \PY{p}{[}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{92}\PY{p}{,} \PY{l+m+mi}{90}\PY{p}{,} \PY{l+m+mi}{95}\PY{p}{,} \PY{l+m+mi}{93}\PY{p}{,} \PY{l+m+mi}{92}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{92}\PY{p}{,} \PY{l+m+mi}{93}\PY{p}{,} \PY{l+m+mi}{94}\PY{p}{,} \PY{l+m+mi}{92}\PY{p}{]}\PY{p}{]}
+\PY{n}{reg}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{new\PYZus{}examples}\PY{p}{)} \PY{c+c1}{\PYZsh{} Predict on some new data using the trained model}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{24}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+array([86.28571429, 86.28571429])
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{itemize}
+\tightlist
+\item
+  The \texttt{fit} and \texttt{predict} paradigms similar to
+  classification. The \texttt{score} method in the context of regression
+  returns somethings called
+  \href{https://scikit-learn.org/stable/modules/generated/sklearn.metrics.r2_score.html\#sklearn.metrics.r2_score}{\(R^2\)
+  score}. (More on this in later videos.)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The maximum \(R^2\) is 1 for perfect predictions.
+  \item
+    For \texttt{DummyRegressor} it returns the mean of the \texttt{y}
+    values.
+  \end{itemize}
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{25}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{reg}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{25}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+0.0
+\end{Verbatim}
+\end{tcolorbox}
+        
+    
+
+    \subsection{❓❓ Questions for you}\label{questions-for-you}
+
+\subsubsection{Exercise 2.4}\label{exercise-2.4}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Order the steps below to build ML models using \texttt{sklearn}.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{score} to evaluate the performance of a given model
+  \item
+    \texttt{predict} on new examples
+  \item
+    Creating a model instance
+  \item
+    Creating \texttt{X} and \texttt{y}
+  \item
+    \texttt{fit}
+  \end{itemize}
+\end{enumerate}
+
+    
+
+    \subsection{Break (5 min)}\label{break-5-min}
+
+\includegraphics{/Users/charleenchu/Desktop/school/cpsc330-2023W2/lectures/img/eva-coffee.png}
+
+\begin{itemize}
+\tightlist
+\item
+  We will try to take a 5-minute break half way through every class.
+\end{itemize}
+
+    
+
+    \subsection{\texorpdfstring{Decision trees
+{[}\href{https://youtu.be/Hcf19Ij35rA}{video}{]}}{Decision trees {[}video{]}}}\label{decision-trees-video}
+
+    \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+Check out \href{https://youtu.be/Hcf19Ij35rA}{the accompanying video} on
+this material. \_\_\_
+
+    \subsubsection{Writing a traditional program to predict quiz2
+grade}\label{writing-a-traditional-program-to-predict-quiz2-grade}
+
+\begin{itemize}
+\tightlist
+\item
+  Can we do better than the baseline?
+\item
+  Forget about ML for a second. If you are asked to write a program to
+  predict whether a student gets an A+ or not in quiz2, how would you go
+  for it?\\
+\item
+  For simplicity, let's binarize the feature values.
+\end{itemize}
+
+\includegraphics{/Users/charleenchu/Desktop/school/cpsc330-2023W2/lectures/img/quiz2-grade-toy.png}
+
+    \begin{itemize}
+\tightlist
+\item
+  Is there a pattern that distinguishes yes's from no's and what does
+  the pattern say about today?
+\item
+  How about a rule-based algorithm with a number of \emph{if else}
+  statements?\\
+  \texttt{if\ class\_attendance\ ==\ 1\ and\ quiz1\ ==\ 1:\ \ \ \ \ \ \ \ \ quiz2\ ==\ "A+"\ \ \ \ \ elif\ class\_attendance\ ==\ 1\ and\ lab3\ ==\ 1\ and\ lab4\ ==\ 1:\ \ \ \ \ \ \ \ \ quiz2\ ==\ "A+"\ \ \ \ \ ...}
+\end{itemize}
+
+    \begin{itemize}
+\tightlist
+\item
+  How many possible rule combinations there could be with the given 7
+  binary features?
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Gets unwieldy pretty quickly
+  \end{itemize}
+\end{itemize}
+
+    \subsubsection{Decision tree algorithm}\label{decision-tree-algorithm}
+
+\begin{itemize}
+\tightlist
+\item
+  A machine learning algorithm to derive such rules from data in a
+  principled way.\\
+\item
+  Have you ever played
+  \href{https://en.wikipedia.org/wiki/Twenty_questions}{20-questions
+  game}? Decision trees are based on the same idea!
+\item
+  Let's \texttt{fit} a decision tree using \texttt{scikit-learn} and
+  \texttt{predict} with it.
+\item
+  Recall that \texttt{scikit-learn} uses the term \texttt{fit} for
+  training or learning and uses \texttt{predict} for prediction.
+\end{itemize}
+
+    \subsubsection{\texorpdfstring{Building decision trees with
+\texttt{sklearn}}{Building decision trees with sklearn}}\label{building-decision-trees-with-sklearn}
+
+Let's binarize our toy dataset for simplicity.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{55}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{classification\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../data/quiz2\PYZhy{}grade\PYZhy{}toy\PYZhy{}classification.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{X} \PY{o}{=} \PY{n}{classification\PYZus{}df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{quiz2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+\PY{n}{y} \PY{o}{=} \PY{n}{classification\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{quiz2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+
+\PY{n}{X\PYZus{}binary} \PY{o}{=} \PY{n}{X}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+\PY{n}{columns} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{lab1}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{lab2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{lab3}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{lab4}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{quiz1}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{k}{for} \PY{n}{col} \PY{o+ow}{in} \PY{n}{columns}\PY{p}{:}
+    \PY{n}{X\PYZus{}binary}\PY{p}{[}\PY{n}{col}\PY{p}{]} \PY{o}{=} \PY{n}{X\PYZus{}binary}\PY{p}{[}\PY{n}{col}\PY{p}{]}\PY{o}{.}\PY{n}{apply}\PY{p}{(}\PY{k}{lambda} \PY{n}{x}\PY{p}{:} \PY{l+m+mi}{1} \PY{k}{if} \PY{n}{x} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{l+m+mi}{90} \PY{k}{else} \PY{l+m+mi}{0}\PY{p}{)}
+\PY{n}{X\PYZus{}binary}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{55}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   ml\_experience  class\_attendance  lab1  lab2  lab3  lab4  quiz1
+0              1                 1     1     1     0     1      1
+1              1                 0     1     1     0     0      1
+2              0                 0     0     0     0     0      0
+3              0                 1     1     1     1     1      0
+4              0                 1     0     0     1     1      0
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{27}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{y}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{27}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+0        A+
+1    not A+
+2    not A+
+3        A+
+4        A+
+Name: quiz2, dtype: object
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \paragraph{\texorpdfstring{\texttt{DummyClassifier} on quiz2 grade
+prediction toy
+dataset}{DummyClassifier on quiz2 grade prediction toy dataset}}\label{dummyclassifier-on-quiz2-grade-prediction-toy-dataset}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{28}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{dummy\PYZus{}clf} \PY{o}{=} \PY{n}{DummyClassifier}\PY{p}{(}\PY{n}{strategy}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{most\PYZus{}frequent}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{dummy\PYZus{}clf}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}binary}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+\PY{n}{dummy\PYZus{}clf}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{X\PYZus{}binary}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{28}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+0.5238095238095238
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \paragraph{\texorpdfstring{\texttt{DecisionTreeClassifier} on quiz2
+grade prediction toy
+dataset}{DecisionTreeClassifier on quiz2 grade prediction toy dataset}}\label{decisiontreeclassifier-on-quiz2-grade-prediction-toy-dataset}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{29}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{tree} \PY{k+kn}{import} \PY{n}{DecisionTreeClassifier}
+
+\PY{n}{model} \PY{o}{=} \PY{n}{DecisionTreeClassifier}\PY{p}{(}\PY{p}{)} \PY{c+c1}{\PYZsh{} Create a decision tree}
+\PY{n}{model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}binary}\PY{p}{,} \PY{n}{y}\PY{p}{)} \PY{c+c1}{\PYZsh{} Fit a decision tree}
+\PY{n}{model}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{X\PYZus{}binary}\PY{p}{,} \PY{n}{y}\PY{p}{)} \PY{c+c1}{\PYZsh{} Assess the model}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{29}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+0.9047619047619048
+\end{Verbatim}
+\end{tcolorbox}
+        
+    The decision tree classifier is giving much higher accuracy than the
+dummy classifier. That's good news!
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{30}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Call the custom\PYZus{}plot\PYZus{}tree function to visualize the customized tree}
+\PY{n}{width}\PY{o}{=}\PY{l+m+mi}{12} 
+\PY{n}{height} \PY{o}{=} \PY{l+m+mi}{8}
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{n}{width}\PY{p}{,} \PY{n}{height}\PY{p}{)}\PY{p}{)}
+\PY{n}{custom\PYZus{}plot\PYZus{}tree}\PY{p}{(}\PY{n}{model}\PY{p}{,} 
+                 \PY{n}{feature\PYZus{}names}\PY{o}{=}\PY{n}{X\PYZus{}binary}\PY{o}{.}\PY{n}{columns}\PY{o}{.}\PY{n}{tolist}\PY{p}{(}\PY{p}{)}\PY{p}{,} 
+                 \PY{n}{class\PYZus{}names}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{A+}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{not A+}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}
+                 \PY{n}{impurity}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,}
+                 \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_103_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsubsection{Some terminology related to
+trees}\label{some-terminology-related-to-trees}
+
+Here is a commonly used terminology in a typical representation of
+decision trees.
+
+\begin{description}
+\tightlist
+\item[\textbf{A root node}]
+represents the first condition to check or question to ask
+\item[\textbf{A branch}]
+connects a node (condition) to the next node (condition) in the tree.
+Each branch typically represents either true or false.
+\item[\textbf{An internal node}]
+represents conditions within the tree
+\item[\textbf{A leaf node}]
+represents the predicted class/value when the path from root to the leaf
+node is followed.
+\item[\textbf{Tree depth}]
+The number of edges on the path from the root node to the farthest away
+leaf node.
+\end{description}
+
+    \subsubsection{\texorpdfstring{How does \texttt{predict}
+work?}{How does predict work?}}\label{how-does-predict-work}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{31}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{new\PYZus{}example} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\PY{n}{new\PYZus{}example} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{data}\PY{o}{=}\PY{n}{new\PYZus{}example}\PY{p}{,} \PY{n}{columns}\PY{o}{=}\PY{n}{X}\PY{o}{.}\PY{n}{columns}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{32}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{n}{width}\PY{p}{,} \PY{n}{height}\PY{p}{)}\PY{p}{)}
+\PY{n}{custom\PYZus{}plot\PYZus{}tree}\PY{p}{(}\PY{n}{model}\PY{p}{,} 
+                 \PY{n}{feature\PYZus{}names}\PY{o}{=}\PY{n}{X\PYZus{}binary}\PY{o}{.}\PY{n}{columns}\PY{o}{.}\PY{n}{tolist}\PY{p}{(}\PY{p}{)}\PY{p}{,} 
+                 \PY{n}{class\PYZus{}names}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{A+}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{not A+}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}
+                 \PY{n}{impurity}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,}
+                 \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_107_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    What's the prediction for the new example?
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{33}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{model}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{new\PYZus{}example}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{33}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+array(['A+'], dtype=object)
+\end{Verbatim}
+\end{tcolorbox}
+        
+    In summary, given a learned tree and a test example, during prediction
+time,\\
+- Start at the top of the tree. Ask binary questions at each node and
+follow the appropriate path in the tree. Once you are at a leaf node,
+you have the prediction. - Note that the model only considers the
+features which are in the learned tree and ignores all other features.
+
+    \subsubsection{\texorpdfstring{How does \texttt{fit}
+work?}{How does fit work?}}\label{how-does-fit-work}
+
+\begin{itemize}
+\tightlist
+\item
+  Decision tree is inspired by
+  \href{https://en.wikipedia.org/wiki/Twenty_questions}{20-questions
+  game}.
+\item
+  Each node either represents a question or an answer. The terminal
+  nodes (called leaf nodes) represent answers.
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{34}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plot\PYZus{}fruit\PYZus{}tree}\PY{p}{(}\PY{p}{)} \PY{c+c1}{\PYZsh{} defined in code/plotting\PYZus{}functions.py}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_112_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsubsection{\texorpdfstring{How does \texttt{fit}
+work?}{How does fit work?}}\label{how-does-fit-work}
+
+\begin{itemize}
+\tightlist
+\item
+  Which features are most useful for classification?
+\item
+  Minimize \textbf{impurity} at each question
+\item
+  Common criteria to minimize impurity:
+  \href{https://scikit-learn.org/stable/modules/tree.html\#classification-criteria}{gini
+  index}, information gain, cross entropy
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{35}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{tree} \PY{k+kn}{import} \PY{n}{DecisionTreeClassifier}
+
+\PY{n}{model} \PY{o}{=} \PY{n}{DecisionTreeClassifier}\PY{p}{(}\PY{p}{)} \PY{c+c1}{\PYZsh{} Create a decision tree}
+\PY{n}{model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}binary}\PY{p}{,} \PY{n}{y}\PY{p}{)} \PY{c+c1}{\PYZsh{} Fit a decision tree}
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{n}{width}\PY{p}{,} \PY{n}{height}\PY{p}{)}\PY{p}{)}
+\PY{n}{custom\PYZus{}plot\PYZus{}tree}\PY{p}{(}\PY{n}{model}\PY{p}{,} 
+                 \PY{n}{feature\PYZus{}names}\PY{o}{=}\PY{n}{X\PYZus{}binary}\PY{o}{.}\PY{n}{columns}\PY{o}{.}\PY{n}{tolist}\PY{p}{(}\PY{p}{)}\PY{p}{,} 
+                 \PY{n}{class\PYZus{}names}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{A+}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{not A+}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}
+                 \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_114_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+We won't go through \textbf{how} it does this - that's CPSC 340. But
+it's worth noting that it support two types of inputs: 1. Categorical
+(e.g., Yes/No or more options, as shown in the tree above) 2. Numeric (a
+number)In the numeric case, the decision tree algorithm also picks the
+\emph{threshold}. \_\_\_
+
+    \subsubsection{Decision trees with continuous
+features}\label{decision-trees-with-continuous-features}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{36}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{36}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   ml\_experience  class\_attendance  lab1  lab2  lab3  lab4  quiz1
+0              1                 1    92    93    84    91     92
+1              1                 0    94    90    80    83     91
+2              0                 0    78    85    83    80     80
+3              0                 1    91    94    92    91     89
+4              0                 1    77    83    90    92     85
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{37}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{model} \PY{o}{=} \PY{n}{DecisionTreeClassifier}\PY{p}{(}\PY{p}{)}
+\PY{n}{model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{n}{width}\PY{p}{,} \PY{n}{height}\PY{p}{)}\PY{p}{)}
+\PY{n}{custom\PYZus{}plot\PYZus{}tree}\PY{p}{(}\PY{n}{model}\PY{p}{,} 
+                 \PY{n}{feature\PYZus{}names}\PY{o}{=}\PY{n}{X\PYZus{}binary}\PY{o}{.}\PY{n}{columns}\PY{o}{.}\PY{n}{tolist}\PY{p}{(}\PY{p}{)}\PY{p}{,} 
+                 \PY{n}{class\PYZus{}names}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{A+}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{not A+}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}
+                 \PY{n}{impurity}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,}
+                 \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_118_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsubsection{Decision tree for regression
+problems}\label{decision-tree-for-regression-problems}
+
+\begin{itemize}
+\tightlist
+\item
+  We can also use decision tree algorithm for regression.
+\item
+  Instead of gini, we use
+  \href{https://scikit-learn.org/stable/modules/tree.html\#mathematical-formulation}{some
+  other criteria} for splitting. A common one is mean squared error
+  (MSE). (More on this in later videos.)
+\item
+  \texttt{scikit-learn} supports regression using decision trees with
+  \texttt{DecisionTreeRegressor}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{fit} and \texttt{predict} paradigms similar to
+    classification
+  \item
+    \texttt{score} returns somethings called
+    \href{https://scikit-learn.org/stable/modules/generated/sklearn.metrics.r2_score.html\#sklearn.metrics.r2_score}{\(R^2\)
+    score}.
+
+    \begin{itemize}
+    \tightlist
+    \item
+      The maximum \(R^2\) is 1 for perfect predictions.
+    \item
+      It can be negative which is very bad (worse than
+      \texttt{DummyRegressor}).
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{38}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{regression\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../data/quiz2\PYZhy{}grade\PYZhy{}toy\PYZhy{}regression.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{regression\PYZus{}df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{38}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   ml\_experience  class\_attendance  lab1  lab2  lab3  lab4  quiz1  quiz2
+0              1                 1    92    93    84    91     92     90
+1              1                 0    94    90    80    83     91     84
+2              0                 0    78    85    83    80     80     82
+3              0                 1    91    94    92    91     89     92
+4              0                 1    77    83    90    92     85     90
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{39}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X} \PY{o}{=} \PY{n}{regression\PYZus{}df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{quiz2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+\PY{n}{y} \PY{o}{=} \PY{n}{regression\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{quiz2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+
+\PY{n}{depth} \PY{o}{=} \PY{l+m+mi}{2}
+\PY{n}{reg\PYZus{}model} \PY{o}{=} \PY{n}{DecisionTreeRegressor}\PY{p}{(}\PY{n}{max\PYZus{}depth}\PY{o}{=}\PY{n}{depth}\PY{p}{)}
+\PY{n}{reg\PYZus{}model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{)}\PY{p}{;} 
+\PY{n}{regression\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{predicted\PYZus{}quiz2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{reg\PYZus{}model}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{R\PYZca{}2 score on the training data: }\PY{l+s+si}{\PYZpc{}0.3f}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{reg\PYZus{}model}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\PY{n}{regression\PYZus{}df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+R\^{}2 score on the training data: 0.989
+
+
+    \end{Verbatim}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{39}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   ml\_experience  class\_attendance  lab1  lab2  lab3  lab4  quiz1  quiz2  \textbackslash{}
+0              1                 1    92    93    84    91     92     90
+1              1                 0    94    90    80    83     91     84
+2              0                 0    78    85    83    80     80     82
+3              0                 1    91    94    92    91     89     92
+4              0                 1    77    83    90    92     85     90
+
+   predicted\_quiz2
+0        90.333333
+1        83.000000
+2        83.000000
+3        92.000000
+4        90.333333
+\end{Verbatim}
+\end{tcolorbox}
+        
+    
+
+    \subsection{❓❓ Questions for you}\label{questions-for-you}
+
+    \subsubsection{iClicker Exercise 2.5 Baselines and decision
+trees}\label{iclicker-exercise-2.5-baselines-and-decision-trees}
+
+\textbf{iClicker cloud join link: https://join.iclicker.com/WMSX}
+
+\textbf{Select all of the following statements which are TRUE.}
+
+\begin{itemize}
+\tightlist
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \tightlist
+  \item
+    Change in features (i.e., binarizing features above) would change
+    \texttt{DummyClassifier} predictions.
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \setcounter{enumi}{1}
+  \tightlist
+  \item
+    \texttt{predict} takes only \texttt{X} as argument whereas
+    \texttt{fit} and \texttt{score} take both \texttt{X} and \texttt{y}
+    as arguments.
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \setcounter{enumi}{2}
+  \tightlist
+  \item
+    For the decision tree algorithm to work, the feature values must be
+    binary.
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \def\labelenumi{(\Alph{enumi})}
+  \setcounter{enumi}{3}
+  \tightlist
+  \item
+    The prediction in a decision tree works by routing the example from
+    the root to the leaf.
+  \end{enumerate}
+\end{itemize}
+
+    
+
+    \subsection{\texorpdfstring{More terminology
+{[}\href{https://youtu.be/KEtsfXn4w2E}{video}{]}}{More terminology {[}video{]}}}\label{more-terminology-video}
+
+\begin{itemize}
+\tightlist
+\item
+  Parameters and hyperparameters
+\item
+  Decision boundary
+\end{itemize}
+
+    \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+Check out \href{https://youtu.be/KEtsfXn4w2E}{the accompanying video} on
+this material. \_\_\_
+
+    \subsubsection{Parameters}\label{parameters}
+
+\begin{itemize}
+\tightlist
+\item
+  The decision tree algorithm primarily learns two things:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    the best feature to split on
+  \item
+    the threshold for the feature to split on at each node
+  \end{itemize}
+\item
+  These are called \textbf{parameters} of the decision tree model.\\
+\item
+  When predicting on new examples, we need parameters of the model.
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{40}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{classification\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../data/quiz2\PYZhy{}grade\PYZhy{}toy\PYZhy{}classification.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{X} \PY{o}{=} \PY{n}{classification\PYZus{}df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{quiz2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+\PY{n}{y} \PY{o}{=} \PY{n}{classification\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{quiz2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{n}{model} \PY{o}{=} \PY{n}{DecisionTreeClassifier}\PY{p}{(}\PY{p}{)}
+\PY{n}{model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{41}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{n}{width}\PY{p}{,} \PY{n}{height}\PY{p}{)}\PY{p}{)}
+\PY{n}{custom\PYZus{}plot\PYZus{}tree}\PY{p}{(}\PY{n}{model}\PY{p}{,} 
+                 \PY{n}{feature\PYZus{}names}\PY{o}{=}\PY{n}{X\PYZus{}binary}\PY{o}{.}\PY{n}{columns}\PY{o}{.}\PY{n}{tolist}\PY{p}{(}\PY{p}{)}\PY{p}{,} 
+                 \PY{n}{class\PYZus{}names}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{A+}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{not A+}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}
+                 \PY{n}{impurity}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,}
+                 \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_130_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{itemize}
+\tightlist
+\item
+  With the default setting, the nodes are expanded until all leaves are
+  ``pure''.
+\end{itemize}
+
+    \begin{itemize}
+\tightlist
+\item
+  The decision tree is creating very specific rules, based on just one
+  example from the data.
+\item
+  Is it possible to control the learning in any way?
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Yes! One way to do it is by controlling the \textbf{depth} of the
+    tree, which is the length of the longest path from the tree root to
+    a leaf.
+  \end{itemize}
+\end{itemize}
+
+    \subsubsection{\texorpdfstring{Decision tree with
+\texttt{max\_depth=1}}{Decision tree with max\_depth=1}}\label{decision-tree-with-max_depth1}
+
+\begin{description}
+\tightlist
+\item[\textbf{Decision stump}]
+A decision tree with only one split (depth=1) is called a
+\textbf{decision stump}.
+\end{description}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{42}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{model} \PY{o}{=} \PY{n}{DecisionTreeClassifier}\PY{p}{(}\PY{n}{max\PYZus{}depth}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+\PY{n}{model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+\PY{n}{width}\PY{o}{=}\PY{l+m+mi}{8}\PY{p}{;}\PY{n}{height}\PY{o}{=}\PY{l+m+mi}{2}
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{n}{width}\PY{p}{,} \PY{n}{height}\PY{p}{)}\PY{p}{)}
+\PY{n}{custom\PYZus{}plot\PYZus{}tree}\PY{p}{(}\PY{n}{model}\PY{p}{,} 
+                 \PY{n}{feature\PYZus{}names}\PY{o}{=}\PY{n}{X\PYZus{}binary}\PY{o}{.}\PY{n}{columns}\PY{o}{.}\PY{n}{tolist}\PY{p}{(}\PY{p}{)}\PY{p}{,} 
+                 \PY{n}{class\PYZus{}names}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{A+}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{not A+}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}
+                 \PY{n}{impurity}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,}                
+                 \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{12}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_134_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \texttt{max\_depth} is a \textbf{hyperparameter} of
+\texttt{DecisionTreeClassifier}.
+
+    \subsubsection{\texorpdfstring{Decision tree with
+\texttt{max\_depth=3}}{Decision tree with max\_depth=3}}\label{decision-tree-with-max_depth3}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{43}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{model} \PY{o}{=} \PY{n}{DecisionTreeClassifier}\PY{p}{(}
+    \PY{n}{max\PYZus{}depth}\PY{o}{=}\PY{l+m+mi}{3}
+\PY{p}{)}  \PY{c+c1}{\PYZsh{} Let\PYZsq{}s try another value for the hyperparameter}
+\PY{n}{model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+\PY{n}{width}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{;}\PY{n}{height}\PY{o}{=}\PY{l+m+mi}{5}
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{n}{width}\PY{p}{,} \PY{n}{height}\PY{p}{)}\PY{p}{)}
+
+\PY{n}{custom\PYZus{}plot\PYZus{}tree}\PY{p}{(}\PY{n}{model}\PY{p}{,} 
+                 \PY{n}{feature\PYZus{}names}\PY{o}{=}\PY{n}{X\PYZus{}binary}\PY{o}{.}\PY{n}{columns}\PY{o}{.}\PY{n}{tolist}\PY{p}{(}\PY{p}{)}\PY{p}{,} 
+                 \PY{n}{class\PYZus{}names}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{A+}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{not A+}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}
+                 \PY{n}{impurity}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,}                
+                 \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{12}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_137_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsubsection{Parameters and hyperparameters:
+Summary}\label{parameters-and-hyperparameters-summary}
+
+\begin{description}
+\tightlist
+\item[\textbf{Parameters}]
+When you call \texttt{fit}, a bunch of values get set, like the features
+to split on and split thresholds. These are called \textbf{parameters}.
+These are learned by the algorithm from the data during training. We
+need them during prediction time.
+\item[\textbf{Hyperparameters}]
+Even before calling \texttt{fit} on a specific data set, we can set some
+``knobs'' that control the learning. These are called
+\textbf{hyperparameters}. These are specified based on: expert
+knowledge, heuristics, or systematic/automated optimization (more on
+this in the coming lectures).
+\end{description}
+
+    \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+In \texttt{sklearn} hyperparameters are set in the constructor. \_\_\_
+
+    Above we looked at the \texttt{max\_depth} hyperparameter. Some other
+commonly used hyperparameters of decision tree are:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{min\_samples\_split}
+\item
+  \texttt{min\_samples\_leaf}
+\item
+  \texttt{max\_leaf\_nodes}
+\end{itemize}
+
+    \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+See
+\href{https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html}{here}
+for other hyperparameters of a tree. \_\_\_
+
+    \subsubsection{Decision boundary}\label{decision-boundary}
+
+What do we do with learned models? So far we have been using them to
+predict the class of a new instance. Another way to think about them is
+to ask: what sort of test examples will the model classify as positive,
+and what sort will it classify as negative?
+
+    \paragraph{Example 1: quiz 2 grade
+prediction}\label{example-1-quiz-2-grade-prediction}
+
+For visualization purposes, let's consider a subset of the data with
+only two features.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{44}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X\PYZus{}subset} \PY{o}{=} \PY{n}{X}\PY{p}{[}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{lab4}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{quiz1}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{]}
+\PY{n}{X\PYZus{}subset}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{44}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   lab4  quiz1
+0    91     92
+1    83     91
+2    80     80
+3    91     89
+4    92     85
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \subparagraph{\texorpdfstring{Decision boundary for
+\texttt{max\_depth=1}}{Decision boundary for max\_depth=1}}\label{decision-boundary-for-max_depth1}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{45}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{depth} \PY{o}{=} \PY{l+m+mi}{1}  \PY{c+c1}{\PYZsh{} decision stump}
+\PY{n}{model} \PY{o}{=} \PY{n}{DecisionTreeClassifier}\PY{p}{(}\PY{n}{max\PYZus{}depth}\PY{o}{=}\PY{n}{depth}\PY{p}{)}
+\PY{n}{model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}subset}\PY{o}{.}\PY{n}{values}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+\PY{n}{plot\PYZus{}tree\PYZus{}decision\PYZus{}boundary\PYZus{}and\PYZus{}tree}\PY{p}{(}
+    \PY{n}{model}\PY{p}{,} \PY{n}{X\PYZus{}subset}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{x\PYZus{}label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{lab4}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{y\PYZus{}label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{quiz1}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_146_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    We assume geometric view of the data. Here, the red region corresponds
+to ``not A+'' class and blue region corresponds to ``A+'' class. And
+there is a line separating the red region and the blue region which is
+called the \textbf{decision boundary} of the model. Different models
+have different kinds of decision boundaries. In decision tree models,
+when we are working with only two features, the decision boundary is
+made up of horizontal and vertical lines. In the example above, the
+decision boundary is created by asking one question
+\texttt{lab4\ \textless{}=\ 84.5}.
+
+    \subparagraph{\texorpdfstring{Decision boundary for
+\texttt{max\_depth=2}}{Decision boundary for max\_depth=2}}\label{decision-boundary-for-max_depth2}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{46}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{model} \PY{o}{=} \PY{n}{DecisionTreeClassifier}\PY{p}{(}\PY{n}{max\PYZus{}depth}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}
+\PY{n}{model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}subset}\PY{o}{.}\PY{n}{values}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+\PY{n}{plot\PYZus{}tree\PYZus{}decision\PYZus{}boundary\PYZus{}and\PYZus{}tree}\PY{p}{(}
+    \PY{n}{model}\PY{p}{,} \PY{n}{X\PYZus{}subset}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{x\PYZus{}label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{lab4}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{y\PYZus{}label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{quiz1}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{12}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_149_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    The decision boundary, i.e., the model gets a bit more complicated.
+
+    \subparagraph{\texorpdfstring{Decision boundary for
+\texttt{max\_depth=5}}{Decision boundary for max\_depth=5}}\label{decision-boundary-for-max_depth5}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{47}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{model} \PY{o}{=} \PY{n}{DecisionTreeClassifier}\PY{p}{(}\PY{n}{max\PYZus{}depth}\PY{o}{=}\PY{l+m+mi}{5}\PY{p}{)}
+\PY{n}{model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}subset}\PY{o}{.}\PY{n}{values}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+\PY{n}{plot\PYZus{}tree\PYZus{}decision\PYZus{}boundary\PYZus{}and\PYZus{}tree}\PY{p}{(}
+    \PY{n}{model}\PY{p}{,} \PY{n}{X\PYZus{}subset}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{x\PYZus{}label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{lab4}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{y\PYZus{}label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{quiz1}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{8}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_152_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    The decision boundary, i.e., the model gets even more complicated with
+\texttt{max\_depth=5}.
+
+    
+
+    \paragraph{Example 2: Predicting country using the longitude and
+latitude}\label{example-2-predicting-country-using-the-longitude-and-latitude}
+
+Imagine that you are given longitude and latitude of some border cities
+of USA and Canada along with which country they belong to. Using this
+training data, you are supposed to come up with a classification model
+to predict whether a given longitude and latitude combination is in the
+USA or Canada.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{48}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{} US Canada cities data}
+\PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../data/canada\PYZus{}usa\PYZus{}cities.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{df}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{48}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+     longitude  latitude country
+0    -130.0437   55.9773     USA
+1    -134.4197   58.3019     USA
+2    -123.0780   48.9854     USA
+3    -122.7436   48.9881     USA
+4    -122.2691   48.9951     USA
+..         {\ldots}       {\ldots}     {\ldots}
+204   -72.7218   45.3990  Canada
+205   -66.6458   45.9664  Canada
+206   -79.2506   42.9931  Canada
+207   -72.9406   45.6275  Canada
+208   -79.4608   46.3092  Canada
+
+[209 rows x 3 columns]
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{49}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{longitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{latitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{50}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{y} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{country}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{51}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{mglearn}\PY{o}{.}\PY{n}{discrete\PYZus{}scatter}\PY{p}{(}\PY{n}{X}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{n}{X}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{longitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{latitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_159_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subparagraph{Real boundary between Canada and
+USA}\label{real-boundary-between-canada-and-usa}
+
+In real life we know what's the boundary between USA and Canada.
+
+\includegraphics{/Users/charleenchu/Desktop/school/cpsc330-2023W2/lectures/img/canada-us-border.jpg}
+
+\href{https://sovereignlimits.com/blog/u-s-canada-border-history-disputes}{Source}
+
+Here we want to pretend that we do not know this boundary and we want to
+infer this boundary based on the limited training examples given to us.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{52}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{model} \PY{o}{=} \PY{n}{DecisionTreeClassifier}\PY{p}{(}\PY{n}{max\PYZus{}depth}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+\PY{n}{model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X}\PY{o}{.}\PY{n}{values}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+\PY{n}{plot\PYZus{}tree\PYZus{}decision\PYZus{}boundary\PYZus{}and\PYZus{}tree}\PY{p}{(}
+    \PY{n}{model}\PY{p}{,}
+    \PY{n}{X}\PY{p}{,}
+    \PY{n}{y}\PY{p}{,}
+    \PY{n}{height}\PY{o}{=}\PY{l+m+mi}{6}\PY{p}{,}
+    \PY{n}{width}\PY{o}{=}\PY{l+m+mi}{16}\PY{p}{,}
+    \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{,}
+    \PY{n}{eps}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,}
+    \PY{n}{x\PYZus{}label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{longitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+    \PY{n}{y\PYZus{}label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{latitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_161_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{53}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{model} \PY{o}{=} \PY{n}{DecisionTreeClassifier}\PY{p}{(}\PY{n}{max\PYZus{}depth}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}
+\PY{n}{model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X}\PY{o}{.}\PY{n}{values}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+\PY{n}{plot\PYZus{}tree\PYZus{}decision\PYZus{}boundary\PYZus{}and\PYZus{}tree}\PY{p}{(}
+    \PY{n}{model}\PY{p}{,}
+    \PY{n}{X}\PY{p}{,}
+    \PY{n}{y}\PY{p}{,}
+    \PY{n}{height}\PY{o}{=}\PY{l+m+mi}{6}\PY{p}{,}
+    \PY{n}{width}\PY{o}{=}\PY{l+m+mi}{16}\PY{p}{,}
+    \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{12}\PY{p}{,}
+    \PY{n}{eps}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,}
+    \PY{n}{x\PYZus{}label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{longitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+    \PY{n}{y\PYZus{}label}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{latitude}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_162_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsubsection{Practice exercises}\label{practice-exercises}
+
+\begin{itemize}
+\tightlist
+\item
+  If you want more practice, check out module 2 in
+  \href{https://ml-learn.mds.ubc.ca/en/module2}{this online course}. All
+  the sections \textbf{without} video or notes symbol are exercises.
+\end{itemize}
+
+    \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+If all of you are working on the exercises, especially coding exercises,
+at the same time, you might have to wait for the real-time feedback for
+a long time or you might even get an error. There is no solution for
+this other than waiting for a while and trying it again.
+
+    Some background on \href{https://ml-learn.mds.ubc.ca/en/}{the online
+course} above: This course is designed by Hayley Boyce, Mike Gelbart,
+and myself. It'll be a great resource at the beginning of this class, as
+it give you a chance to practice what we learn and the framework will
+provide you real-time feedback. \_\_\_
+
+    
+
+    \subsection{Final comments, summary, and
+reflection}\label{final-comments-summary-and-reflection}
+
+What did we learn today?
+
+\begin{itemize}
+\tightlist
+\item
+  There is a lot of terminology and jargon used in ML. Some of the basic
+  terminology includes:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Features, target, examples, training
+  \item
+    Supervised vs.~Unsupervised machine learning\\
+  \item
+    Classification and regression\\
+  \item
+    Accuracy and error\\
+  \item
+    Parameters and hyperparameters
+  \item
+    Decision boundary
+  \end{itemize}
+\end{itemize}
+
+    \begin{itemize}
+\tightlist
+\item
+  Baselines and steps to train a supervised machine learning model
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Baselines serve as reference points in ML workflow.
+  \end{itemize}
+\end{itemize}
+
+    \begin{itemize}
+\tightlist
+\item
+  Decision trees
+
+  \begin{itemize}
+  \tightlist
+  \item
+    are models that make predictions by sequentially looking at features
+    and checking whether they are above/below a threshold
+  \item
+    learn a hierarchy of if/else questions, similar to questions you
+    might ask in a 20-questions game.\\
+  \item
+    learn axis-aligned decision boundaries (vertical and horizontal
+    lines with 2 features)\\
+  \item
+    One way to control the complexity of decision tree models is by
+    using the depth hyperparameter (\texttt{max\_depth} in
+    \texttt{sklearn}).
+  \end{itemize}
+\end{itemize}
+
+    
+
+    \includegraphics{/Users/charleenchu/Desktop/school/cpsc330-2023W2/lectures/img/eva-logging-off.png}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
