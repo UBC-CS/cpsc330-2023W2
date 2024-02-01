@@ -50,7 +50,40 @@ def plot_2d_separator(classifier, X, fill=False, ax=None, eps=None, alpha=1,
     ax.set_xticks(())
     ax.set_yticks(())
 
+def plot_2d_scores(classifier, X, ax=None, eps=None, alpha=1, cm="viridis",
+                   function=None):
+    # binary with fill
+    if eps is None:
+        eps = X.std() / 2.
 
+    if ax is None:
+        ax = plt.gca()
+
+    x_min, x_max = X[:, 0].min() - eps, X[:, 0].max() + eps
+    y_min, y_max = X[:, 1].min() - eps, X[:, 1].max() + eps
+    xx = np.linspace(x_min, x_max, 100)
+    yy = np.linspace(y_min, y_max, 100)
+
+    X1, X2 = np.meshgrid(xx, yy)
+    X_grid = np.c_[X1.ravel(), X2.ravel()]
+    if function is None:
+        function = getattr(classifier, "decision_function",
+                           getattr(classifier, "predict_proba"))
+    else:
+        function = getattr(classifier, function)
+    decision_values = function(X_grid)
+    if decision_values.ndim > 1 and decision_values.shape[1] > 1:
+        # predict_proba
+        decision_values = decision_values[:, 1]
+    grr = ax.imshow(decision_values.reshape(X1.shape),
+                    extent=(x_min, x_max, y_min, y_max), aspect='auto',
+                    origin='lower', alpha=alpha, cmap=cm)
+
+    ax.set_xlim(x_min, x_max)
+    ax.set_ylim(y_min, y_max)
+    ax.set_xticks(())
+    ax.set_yticks(())
+    return grr
 
 
 def discrete_scatter(x1, x2, y=None, markers=None, s=10, ax=None,
