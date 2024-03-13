@@ -1318,7 +1318,7 @@ def plot_dbscan_with_labels(X, fig, eps=1.0, min_samples = 2, font_size=14):
         n_clusters = len(set(model.labels_)) - 1 
     else: 
         n_clusters = len(set(model.labels_))
-    plt.title('Number of clusters: %d'%(n_clusters))
+    plt.title('Esp: %d, min samples: %d, Number of clusters: %d'%(eps, min_samples, n_clusters))
     db_colors = ['xkcd:azure', 'yellowgreen', 'tomato', 'teal', 'orangered', 'orchid', 'black', 'xkcd:turquoise' , 'wheat']    
     # colours = []
     # for i in range(n_clusters + 1):
