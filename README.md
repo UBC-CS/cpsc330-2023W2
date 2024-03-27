@@ -47,7 +47,7 @@ Mehrdad Oveisi:
 | hw5 | Feb 26, 11:59pm | [Github repo](https://github.com/UBC-CS/cpsc330-2023W2/tree/main/hw) | [PL](https://ca.prairielearn.com/pl/course_instance/6697) |
 | **Midterm** | Fri. March 1 | [ESB 1013](https://learningspaces.ubc.ca/classrooms/esb-1013) or [HEBB 100](https://learningspaces.ubc.ca/classrooms/hebb-100) (see [piazza](https://piazza.com/class/lr4y28ceun367s/post/210)) | In person |
 | hw6 | Mar 25, 11:59pm | [Github repo](https://github.com/UBC-CS/cpsc330-2023W2/tree/main/hw) | [PL](https://ca.prairielearn.com/pl/course_instance/6697) |
-| hw7 | Apr 1, 11:59pm  | [Github repo](https://github.com/UBC-CS/cpsc330-2023W2/tree/main/hw) | [PL](https://ca.prairielearn.com/pl/course_instance/6697) |
+| hw7 | Apr 2, 11:59pm  | [Github repo](https://github.com/UBC-CS/cpsc330-2023W2/tree/main/hw) | [PL](https://ca.prairielearn.com/pl/course_instance/6697) |
 | hw8 | April 8, 11:59pm | [Github repo](https://github.com/UBC-CS/cpsc330-2023W2/tree/main/hw) | [PL](https://ca.prairielearn.com/pl/course_instance/6697) |
 | **Final exam** | TBD | TBD | TBD |
 
